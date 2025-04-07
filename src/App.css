@@ -1,0 +1,48 @@
+
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 800px; 
+}
+
+
+main{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+form {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.perfumes{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.perfume {
+  text-align: center;
+}
+
+.perfume h3, .movie p {
+  margin: 0;
+  width: 15rem;
+  height: 4rem;
+}
+
+.perfume img {
+  border-radius: 8px;
+  margin-top: 16px;
+  max-height: 15em;
+}
