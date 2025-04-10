@@ -1,15 +1,14 @@
-
 .page {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 800px; 
+  max-width: 800px;
+  padding-top: 70px;
 }
 
-
-main{
+main {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -21,7 +20,7 @@ form {
   justify-content: center;
 }
 
-.perfumes{
+.perfumes {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -35,7 +34,8 @@ form {
   text-align: center;
 }
 
-.perfume h3, .movie p {
+.perfume h3,
+.movie p {
   margin: 0;
   width: 15rem;
   height: 4rem;
