@@ -3,7 +3,7 @@
 
 function ListOfPerfumes ({perfumes }) {
   return (
-    <ul className="perfumes">
+    <ul className="perfumes ">
     { perfumes.map(perfumes => (
       <li className="perfume" key={ perfumes.id }>
         <h3>{perfumes.titulo}</h3>

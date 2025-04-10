@@ -1,4 +1,4 @@
-import "./App.css";
+
 import { Perfumes } from "./components/perfumes";
 import productList from "./products/productList.json";
 /* import noResults from "./products/noResults.json" */

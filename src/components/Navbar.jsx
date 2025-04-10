@@ -1,6 +1,6 @@
 const Navbar = () => {
   return (
-    <nav className="navbar fixed-top navbar-dark bg-dark px-4">
+    <nav className="navbar fixed-top navbar-dark bg-dark px-4 ">
       <div className="container-fluid">
         <a className="navbar-brand fw-bold" href="#">
           Perfumería El Turco
