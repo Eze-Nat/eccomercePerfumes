@@ -1,15 +1,11 @@
-
 .page {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* align-items: center; */
   width: 100%;
-  /* max-width: 800px;  */
 }
 
-
-main{
+main {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -21,7 +17,7 @@ form {
   justify-content: center;
 }
 
-.perfumes{
+.perfumes {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -36,7 +32,8 @@ form {
   text-align: center;
 }
 
-.perfume h3, .movie p {
+.perfume h3,
+.movie p {
   margin: 0;
   width: 15rem;
   height: 4rem;
@@ -48,18 +45,4 @@ form {
   max-height: 15em;
   align-items: center;
   display: block;
-}
-
-.navbar {
-  width: 100%;
-  background-color: var(--color-bg);
-  color: var(--color-text); /
-}
-.navbar-wrapper {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }

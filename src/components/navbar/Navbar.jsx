@@ -1,3 +1,5 @@
+import "./navbar.css";
+
 const Navbar = () => {
   return (
     <nav className="navbar fixed-top navbar-dark bg-dark px-4 ">
@@ -20,7 +22,12 @@ const Navbar = () => {
         </div>
 
         <div className="d-flex align-items-center gap-3">
-          <a href="#" className="text-white" title="Iniciar sesión">
+          <a
+            href="#"
+            className="text-white"
+            title="Iniciar sesión"
+            // onClick={() => setMostrarLogin(false)}
+          >
             <i className="bi bi-person fs-4"></i>
           </a>
           <a href="#" className="text-white" title="Carrito">
