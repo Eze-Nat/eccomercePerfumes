@@ -11,11 +11,11 @@ main {
   width: 100%;
 }
 
-form {
+/* form {
   align-items: center;
   display: flex;
   justify-content: center;
-}
+} */
 
 .perfumes {
   list-style: none;

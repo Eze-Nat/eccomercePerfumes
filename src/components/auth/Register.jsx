@@ -1,10 +1,20 @@
 import { useState } from "react";
 
-const register = () => {
-  const [nombre, setNombre] = useState("");
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,34 +24,21 @@ const register = () => {
       console.log("Las contraseñas no coinciden");
     }
   };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
         <h2>Crear cuenta</h2>
         <div className="mb-3">
-          <label htmlFor="nombre" className="form-label">
-            Nombre
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="nombre"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            required
-          />
-          <div className="form-text">Escribí tu nombre completo.</div>
-        </div>
-        <div className="mb-3">
           <label htmlFor="email" className="form-label">
-            Correo electrónico
+            Ingrese correo electrónico
           </label>
           <input
             type="email"
             className="form-control"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
           />
           <div className="form-text">
@@ -58,20 +55,20 @@ const register = () => {
             className="form-control"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="password2" className="form-label">
-            Contraseña
+          <label htmlFor="confirmPassword" className="form-label">
+            Confirmar contraseña
           </label>
           <input
             type="password"
             className="form-control"
-            id="password2"
+            id="confirmPassword"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={handleConfirmPasswordChange}
             required
           />
         </div>
@@ -83,3 +80,5 @@ const register = () => {
     </>
   );
 };
+
+export default Register;
