@@ -23,7 +23,7 @@ const Navbar = () => {
 
         <div className="d-flex align-items-center gap-3">
           <a
-            href="#"
+            href="/login"
             className="text-white"
             title="Iniciar sesión"
             // onClick={() => setMostrarLogin(false)}
