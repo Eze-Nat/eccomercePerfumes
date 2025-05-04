@@ -1,14 +1,19 @@
 
-
-
-function ListOfPerfumes ({perfumes }) {
+function ListOfPerfumes ({perfumes,searchPerfume}) {
+  
+  const perfumesFiltered = perfumes.filter(perfume => perfume.titulo?.toUpperCase().includes(searchPerfume.toUpperCase()))
+  console.log(perfumesFiltered);
+  if (!perfumesFiltered.length) {
+    return <NoPerfumesResults />;
+  }
   return (
     <ul className="perfumes ">
-    { perfumes.map(perfumes => (
-      <li className="perfume" key={ perfumes.id }>
-        <h3>{perfumes.titulo}</h3>
-        <p>{perfumes.descripcion}</p>
-        <img src={ perfumes.imagen } alt={ perfumes.titulo } />	
+    
+    { perfumesFiltered.map(perfume => (
+      <li className="perfume" key={ perfume.id }>
+        <h3>{perfume.titulo}</h3>
+        <p>{perfume.descripcion}</p>
+        <img src={ perfume.imagen } alt={ perfume.titulo } />	
       </li>
     ))
     }
@@ -22,9 +27,10 @@ function NoPerfumesResults ()  {
   )
 }
 
-export function Perfumes ({ perfumes}) {
-  const hasPerfumes = perfumes?.length > 0 
-  return (
-    hasPerfumes ? <ListOfPerfumes perfumes={ perfumes } /> : <NoPerfumesResults />
-  )
+export function Perfumes({ perfumes, searchPerfume = "" }) {
+  if (!perfumes || perfumes.length === 0) {
+    return <NoPerfumesResults />;
+  }
+
+  return <ListOfPerfumes perfumes={perfumes} searchPerfume={searchPerfume} />;
 }

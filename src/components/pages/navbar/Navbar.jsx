@@ -1,6 +1,16 @@
+import { useState } from "react";
 import "./navbar.css";
 
-const Navbar = () => {
+const Navbar = ({onSearchPerfume}) => {
+  const [searchPerfume, SetsearchPerfume] = useState("");
+  const handleOnChange = (event) => {
+    SetsearchPerfume(event.target.value);
+  };
+  const handleOnSubmit = (event) => {
+    event.preventDefault();
+    /* console.log(searchPerfume); */
+    onSearchPerfume(searchPerfume);
+  }
   return (
     <nav className="navbar fixed-top navbar-dark bg-dark px-4 ">
       <div className="container-fluid">
@@ -8,12 +18,18 @@ const Navbar = () => {
           Perfumería El Turco
         </a>
         <div className="flex-grow-1 d-flex justify-content-center">
-          <form className="d-flex" role="search">
+          <form 
+            className="d-flex" 
+            role="search"
+            onSubmit={handleOnSubmit}
+          >
             <input
               className="form-control me-2"
               type="search"
-              placeholder="Buscar"
+              placeholder="Buscar perfume"
               aria-label="Buscar"
+              onChange={handleOnChange}
+              value={searchPerfume}
             />
             <button className="btn btn-outline-light" type="submit">
               Buscar
