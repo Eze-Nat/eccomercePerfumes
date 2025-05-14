@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Perfumes } from "./components/perfumes";
+import { Perfumes } from "./components/perfumes/perfumes.jsx";
 
 
 import Home from "./components/pages/Home";

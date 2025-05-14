@@ -5,6 +5,7 @@ const Navbar = ({onSearchPerfume}) => {
   const [searchPerfume, SetsearchPerfume] = useState("");
   const handleOnChange = (event) => {
     SetsearchPerfume(event.target.value);
+
   };
   const handleOnSubmit = (event) => {
     event.preventDefault();

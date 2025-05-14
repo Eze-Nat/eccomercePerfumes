@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Perfumes } from "../perfumes.jsx";
+import { Perfumes } from "../perfumes/perfumes.jsx";
 import productList from "../../products/productList.json";
 /* import noResults from "./products/noResults.json" */
 import Navbar from "./navbar/Navbar.jsx";
