@@ -70,15 +70,15 @@ const PerfumeCard = ({ perfume = {}, isAdmin = false, onUpdateProduct }) => {
         }
       </div>
 
-      <Button variant="primary" className="btn-perfume mr-2"> 
+      <Button variant="outline-warning" className="btn-perfume m-2"> 
         Agregar Al Carrito
       </Button>
 
       {isAdmin && (
         <>
           <Button 
-            variant="outline-warning" 
-            className="btn-perfume mt-2"
+            variant="outline-danger" 
+            className="btn-perfume m-2"
             onClick={() => setShowAdminControls(!showAdminControls)}
           >
             {showAdminControls ? 'Ocultar controles' : 'Modificar producto'}
