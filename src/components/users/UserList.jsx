@@ -5,15 +5,20 @@ const UserList = ({ users = [], roles = [], onModal, onEdit }) => {
   const [filteredUsers, setFilteredUsers] = useState(users);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Efecto para filtrar usuarios cuando cambia el término de búsqueda o la lista de usuarios
-  useEffect(() => {
+
+const handleUsersFilter = (newSearchTerm) => {
     const filtered = users.filter(user => 
       `${user.first_name} ${user.last_name}`
         .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+        .includes(newSearchTerm.toLowerCase())
     );
     setFilteredUsers(filtered);
-  }, [searchTerm, users]);
+  }
+
+  const handleOnChange = (e) => {
+    setSearchTerm(e.target.value);
+    handleUsersFilter(e.target.value);
+  }
 
   const getRoleName = (roleId) => {
     const role = roles.find(r => r.id === roleId);
@@ -29,7 +34,7 @@ const UserList = ({ users = [], roles = [], onModal, onEdit }) => {
             <FormControl
               placeholder="Buscar por Nombre y/o Apellido..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleOnChange}
             />
           </InputGroup>
         </div>
