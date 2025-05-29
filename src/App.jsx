@@ -1,12 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import { Perfumes } from "./components/perfumes";
-
 
 import Home from "./components/pages/Home";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 
 import "./App.css";
+import Dashboard from "./components/pages/dashboard/Dashboard.jsx";
 
 
 function App() {
@@ -18,6 +17,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard/>} />
       </Routes>
       {/* <main>
         <Navbar />
