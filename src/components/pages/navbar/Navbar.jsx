@@ -1,17 +1,40 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./navbar.css";
 
 const Navbar = ({onSearchPerfume}) => {
-  const [searchPerfume, SetsearchPerfume] = useState("");
-  const handleOnChange = (event) => {
-    SetsearchPerfume(event.target.value);
+  const [searchPerfume, setSearchPerfume] = useState("");
+  const timeoutRef = useRef(null);
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleOnChange = (event) => {
+    const newSearchPerfume=event.target.value;
+    setSearchPerfume(newSearchPerfume);
+    
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    timeoutRef.current = setTimeout(() => {
+        onSearchPerfume(newSearchPerfume);
+      }, 3000);
   };
+
   const handleOnSubmit = (event) => {
     event.preventDefault();
-    /* console.log(searchPerfume); */
+    
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     onSearchPerfume(searchPerfume);
-  }
+  };
+
   return (
     <nav className="navbar fixed-top navbar-dark bg-dark px-4 ">
       <div className="container-fluid">
