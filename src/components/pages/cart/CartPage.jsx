@@ -3,7 +3,22 @@ import { useCart } from "../../../contexts/CartContextProvider";
 import { Button } from "react-bootstrap";
 
 const CartPage = () => {
-  const { cart, removeFromCart, clearCart } = useCart();
+  const { cart, addToCart, removeFromCart, clearCart, decreaseQuantity } =
+    useCart();
+
+  const increaseQuantity = (product) => {
+    addToCart(product);
+  };
+
+  const handleClearCart = () => {
+    if (
+      window.confirm(
+        "🗑 ¿Seguro que quieres vaciar todo el carrito? Esta acción no se puede deshacer."
+      )
+    ) {
+      clearCart();
+    }
+  };
 
   return (
     <div className="cart-page">
@@ -22,6 +37,25 @@ const CartPage = () => {
                 <p>
                   <strong>${item.precio.toFixed(2)}</strong>
                 </p>
+
+                <div className="quantity-controls">
+                  <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    onClick={() => decreaseQuantity(item.id)}
+                  >
+                    -
+                  </Button>
+                  <span className="quantity">{item.cantidad}</span>
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={() => increaseQuantity(item)}
+                  >
+                    +
+                  </Button>
+                </div>
+
                 <Button
                   variant="outline-danger"
                   size="sm"
@@ -36,7 +70,7 @@ const CartPage = () => {
           <Button
             variant="outline-secondary"
             className="clear-cart-btn"
-            onClick={clearCart}
+            onClick={handleClearCart}
           >
             Vaciar carrito
           </Button>
