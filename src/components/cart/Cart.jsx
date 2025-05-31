@@ -1,4 +1,3 @@
-import React from "react";
 import { useCart } from "../contexts/CartContextProvider";
 import { Button } from "react-bootstrap";
 
