@@ -1,28 +1,24 @@
 import { Routes, Route } from "react-router-dom";
-
 import Home from "./components/pages/Home";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import Dashboard from "./components/pages/dashboard/Dashboard.jsx";
+import CartPage from "./components/pages/cart/CartPage.jsx";
+import Navbar from "./components/pages/navbar/Navbar"; // Importamos Navbar
 
 import "./App.css";
-import Dashboard from "./components/pages/dashboard/Dashboard.jsx";
-
 
 function App() {
-  
-
   return (
     <div className="gepa">
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
-      {/* <main>
-        <Navbar />
-        <Perfumes perfumes={perfumes} />
-      </main> */}
     </div>
   );
 }

@@ -1,0 +1,51 @@
+import { createContext, useContext, useState, useEffect } from "react";
+
+export const CartContext = createContext();
+
+const cartSaved = JSON.parse(localStorage.getItem("cart")) || [];
+
+export const CartContextProvider = ({ children }) => {
+  const [cart, setCart] = useState(cartSaved);
+
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    } else {
+      localStorage.removeItem("cart");
+    }
+  }, [cart]);
+
+  const addToCart = (product) => {
+    setCart((prev) => {
+      const existingProduct = prev.find((item) => item.id === product.id);
+      if (existingProduct) {
+        return prev.map((item) =>
+          item.id === product.id
+            ? { ...item, cantidad: item.cantidad + 1 }
+            : item
+        );
+      }
+      return [...prev, { ...product, cantidad: 1 }];
+    });
+  };
+
+  const removeFromCart = (productId) => {
+    setCart(cart.filter((item) => item.id !== productId));
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  return (
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, clearCart }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
+};
+
+export const useCart = () => useContext(CartContext);
+
+export default CartContextProvider;
