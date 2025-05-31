@@ -10,7 +10,9 @@ export const customfetch = (url,fetch_method,req_body, onSuccess, onError) => {
         .then(async res => {
             if (!res.ok) {
                 const errData = await res.json();
+                throw new Error(errData.message?? "Hubo un error inesperado");
             }
+
             return res.json();
         })
         .then(onSuccess)
