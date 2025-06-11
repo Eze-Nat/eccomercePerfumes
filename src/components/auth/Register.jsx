@@ -1,83 +1,162 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { customFetch } from "../utils/fetch/customFetch";
+import {
+  errorNotification,
+  successNotification,
+  warningNotification,
+} from "../utils/notifications/Notifications";
+import AuthContext from "../../contexts/auth/Auth.Context"; // Importa el contexto de autenticación
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    address: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // Accede a la función login del contexto
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.first_name.trim())
+      newErrors.first_name = "El nombre es obligatorio.";
+    if (!formData.last_name.trim())
+      newErrors.last_name = "El apellido es obligatorio.";
+    if (!formData.email.trim()) newErrors.email = "El correo es obligatorio.";
+    if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Correo no válido.";
+    if (!formData.address.trim())
+      newErrors.address = "La dirección es obligatoria.";
+    if (formData.password.length < 6)
+      newErrors.password = "La contraseña debe tener al menos 6 caracteres.";
+    if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Las contraseñas no coinciden.";
+    return newErrors;
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
-      console.log("Usuario registrado");
-    } else {
-      console.log("Las contraseñas no coinciden");
+    const validationErrors = validate();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      warningNotification("Corregí los errores antes de continuar.");
+      return;
     }
+
+    const userData = {
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      email: formData.email,
+      address: formData.address,
+      password: formData.password,
+    };
+
+    customFetch(
+      "/api/users",
+      "POST",
+      userData,
+      (data) => {
+        successNotification("Registro exitoso");
+        login(data.token);
+        navigate("/dashboard");
+      },
+      (error) => {
+        if (error.status === 409) {
+          errorNotification("El correo ya está registrado.");
+        } else {
+          errorNotification("Error al registrarse. Intentalo más tarde.");
+        }
+      }
+    );
+  };
+
+  const handleCancel = () => {
+    navigate("/");
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <h2>Crear cuenta</h2>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Ingrese correo electrónico
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
-          <div className="form-text">
-            Nunca compartiremos tu correo electrónico con nadie más.
-          </div>
-        </div>
+    <form onSubmit={handleSubmit}>
+      <h2>Crear cuenta</h2>
 
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Contraseña
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="confirmPassword" className="form-label">
-            Confirmar contraseña
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            required
-          />
-        </div>
+      <input
+        type="text"
+        name="first_name"
+        placeholder="Nombre"
+        value={formData.first_name}
+        onChange={handleChange}
+      />
+      {errors.first_name && <p className="text-danger">{errors.first_name}</p>}
 
-        <button type="submit" className="btn btn-primary">
-          Registrarse
-        </button>
-      </form>
-    </>
+      <input
+        type="text"
+        name="last_name"
+        placeholder="Apellido"
+        value={formData.last_name}
+        onChange={handleChange}
+      />
+      {errors.last_name && <p className="text-danger">{errors.last_name}</p>}
+
+      <input
+        type="email"
+        name="email"
+        placeholder="Correo electrónico"
+        value={formData.email}
+        onChange={handleChange}
+        autoComplete="email"
+      />
+      {errors.email && <p className="text-danger">{errors.email}</p>}
+
+      <input
+        type="text"
+        name="address"
+        placeholder="Dirección"
+        value={formData.address}
+        onChange={handleChange}
+      />
+      {errors.address && <p className="text-danger">{errors.address}</p>}
+
+      <input
+        type="password"
+        name="password"
+        placeholder="Contraseña"
+        value={formData.password}
+        onChange={handleChange}
+        autoComplete="new-password"
+      />
+      {errors.password && <p className="text-danger">{errors.password}</p>}
+
+      <input
+        type="password"
+        name="confirmPassword"
+        placeholder="Confirmar contraseña"
+        value={formData.confirmPassword}
+        onChange={handleChange}
+        autoComplete="new-password"
+      />
+      {errors.confirmPassword && (
+        <p className="text-danger">{errors.confirmPassword}</p>
+      )}
+
+      <button
+        type="button"
+        onClick={handleCancel}
+        style={{ marginLeft: "10px" }}
+      >
+        Cancelar
+      </button>
+      <button type="submit">Registrarse</button>
+    </form>
   );
 };
 

@@ -1,56 +1,66 @@
 import { useState } from "react";
-import Register from "./Register";
 import { useNavigate } from "react-router-dom";
+import { customFetch } from "../utils/fetch/customFetch";
+import {
+  successNotification,
+  errorNotification,
+} from "../utils/notifications/Notifications";
+import { useAuth } from "../../hooks/useAuth"; // Importa el hook para usar el contexto
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth(); // Extraemos login del contexto
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("sesion iniciada");
-    navigate("/");
-  };
+    setLoading(true);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+    const credentials = { email, password };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleButtonCancel = () => {
-    navigate("/");
-  };
-
-  const handleButtonToRegister = () => {
-    navigate("/Register");
+    customFetch(
+      "/api/auth/login",
+      "POST",
+      credentials,
+      (data) => {
+        login(data.token); // Actualizamos el contexto y localStorage
+        successNotification("¡Inicio de sesión exitoso!");
+        navigate("/dashboard");
+        setLoading(false);
+      },
+      (error) => {
+        const mensaje =
+          error?.message || error?.error || "Error al iniciar sesión.";
+        errorNotification(mensaje);
+        console.error("Error al iniciar sesión:", error);
+        setLoading(false);
+      },
+      true
+    );
   };
 
   return (
     <>
       <form onSubmit={handleSubmit}>
         <h2>Iniciar sesión</h2>
+
         <div className="mb-3">
           <label htmlFor="inputEmail" className="form-label">
-            Correo electronico
+            Correo electrónico
           </label>
           <input
             type="email"
             className="form-control"
             id="inputEmail"
+            autoComplete="email"
             value={email}
-            aria-describedby="emailHelp"
-            onChange={handleEmailChange}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <div id="emailHelp" className="form-text">
-            Nunca compartiremos tu correo electrónico con nadie más.
-          </div>
         </div>
+
         <div className="mb-3">
           <label htmlFor="inputPassword" className="form-label">
             Contraseña
@@ -59,24 +69,32 @@ const Login = () => {
             type="password"
             className="form-control"
             id="inputPassword"
+            autoComplete="current-password"
             value={password}
-            onChange={handlePasswordChange}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">
-          Iniciar sesión
+
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? "Ingresando..." : "Iniciar sesión"}
         </button>
-        <button onClick={handleButtonCancel} className="btn btn-primary">
-          Cerrar
+
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="btn btn-secondary ms-2"
+        >
+          Cancelar
         </button>
       </form>
+
       <p className="mt-3">
         ¿No tenés cuenta?{" "}
         <span
           className="text-primary"
           role="button"
-          onClick={handleButtonToRegister}
+          onClick={() => navigate("/register")}
         >
           Registrate acá
         </span>

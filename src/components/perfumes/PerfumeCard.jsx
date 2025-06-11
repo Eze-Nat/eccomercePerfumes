@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import AdminControls from "../admin/AdminControls";
-import { useCart } from "../../contexts/CartContextProvider";
+import { useCart } from "../../contexts/cart/CartContextProvider";
 
 const PerfumeCard = ({ perfume = {}, isAdmin = false, onUpdateProduct }) => {
   // Estados para el producto
