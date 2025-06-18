@@ -1,0 +1,13 @@
+.navbar {
+    width: 100%;
+    background-color: var(--color-bg);
+    color: var(--color-text); /
+  }
+  .navbar-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }

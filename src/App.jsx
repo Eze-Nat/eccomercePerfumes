@@ -1,27 +1,29 @@
-import './App.css'
-import { Perfumes } from './components/perfumes'
-import productList from "./products/productList.json"
-/* import noResults from "./products/noResults.json" */
+import { Routes, Route } from "react-router-dom";
+import Home from "./components/pages/Home";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import Dashboard from "./components/admin/DashboardAdmin.jsx";
+import CartPage from "./components/pages/cart/CartPage.jsx";
+import Navbar from "./components/pages/navbar/Navbar";
+import { ToastContainer } from "react-toastify";
+import UserListContainer from "./components/admin/users/UserListContainer.jsx";
+import "./App.css";
 
 function App() {
-  const perfumes = productList.Search
-
   return (
-
-      <div className='page'>
-        <header>
-          <h1>Perfumes</h1>
-          <form className='form'>
-            <input placeholder='Perfumes Arabes' />
-            <button type="submit">Buscar</button>
-          </form>
-        </header>
-        <main>
-          <Perfumes perfumes={perfumes}/>
-        </main>
-      </div>
-    
-  )
+    <div className="gepa">
+      <ToastContainer />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/users" element={<UserListContainer />} />
+      </Routes>
+    </div>
+  );
 }
 
-export default App
+export default App;
