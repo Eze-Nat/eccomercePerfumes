@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { Card, Form, Row, Col, Button } from 'react-bootstrap';
+import { useState } from "react";
+import { Card, Form, Row, Col, Button } from "react-bootstrap";
 
 const UserForm = ({
   isAdmin = false,
   editingUser = false,
   userData = {
-    first_name: '',
-    last_name: '',
-    email: '',
-    phone: '',
-    rolId: '',
-    password: '',
-    confirmPassword: ''
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    role_id: "",
+    password: "",
+    confirmPassword: "",
   },
   onCancel = () => {},
   onSuccess = () => {},
   onError = () => {},
-  roles = [{ id: 1, name: 'Usuario' }]
+  roles = [{ id: 1, name: "Usuario" }],
 }) => {
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,27 +24,25 @@ const UserForm = ({
     last_name: userData.last_name,
     email: userData.email,
     phone: userData.phone,
-    rolId: userData.rolId || (roles.length > 0 ? roles[0].id : ''),
-    password: '',
-    confirmPassword: ''
+    role_id: userData.role_id || (roles.length > 0 ? roles[0].id : ""),
+    password: "",
+    confirmPassword: "",
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-    
-    // Asignar rol por defecto si no es admin
-    const finalFormData = !isAdmin 
-      ? { ...formData, rolId: '1' } 
-      : formData;
+
+    // Asignar role_id por defecto si no es admin
+    const finalFormData = !isAdmin ? { ...formData, role_id: 1 } : formData;
 
     if (form.checkValidity() === false) {
       e.stopPropagation();
@@ -53,25 +51,27 @@ const UserForm = ({
     }
 
     if (formData.password !== formData.confirmPassword) {
-      onError('Las contraseñas no coinciden');
+      onError("Las contraseñas no coinciden");
       return;
     }
 
     try {
-      const successMessage = editingUser 
-        ? 'Usuario actualizado correctamente' 
-        : 'Usuario creado correctamente';
-      
+      const successMessage = editingUser
+        ? "Usuario actualizado correctamente"
+        : "Usuario creado correctamente";
+
       onSuccess(successMessage, finalFormData);
     } catch (error) {
-      onError('Error al guardar el usuario');
+      onError("Error al guardar el usuario");
     }
   };
 
   return (
     <Card className="mb-4">
       <Card.Body>
-        <h4 className="mb-4">{editingUser ? 'Editar Usuario' : 'Añadir Nuevo Usuario'}</h4>
+        <h4 className="mb-4">
+          {editingUser ? "Editar Usuario" : "Añadir Nuevo Usuario"}
+        </h4>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row>
             <Col md={6}>
@@ -142,16 +142,16 @@ const UserForm = ({
           {isAdmin && (
             <Row>
               <Col md={6}>
-                <Form.Group className="mb-3" controlId="rolId">
+                <Form.Group className="mb-3" controlId="role_id">
                   <Form.Label>Rol</Form.Label>
                   <Form.Select
-                    name="rolId"
-                    value={formData.rolId}
+                    name="role_id"
+                    value={formData.role_id}
                     onChange={handleInputChange}
                     required
                   >
                     <option value="">Seleccione un rol</option>
-                    {roles.map(role => (
+                    {roles.map((role) => (
                       <option key={role.id} value={role.id}>
                         {role.name}
                       </option>
@@ -162,7 +162,7 @@ const UserForm = ({
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-            </Row>          
+            </Row>
           )}
 
           <Row>
@@ -177,7 +177,9 @@ const UserForm = ({
                   required={!editingUser}
                 />
                 <Form.Control.Feedback type="invalid">
-                  {editingUser ? 'Ingresa una contraseña para actualizarla' : 'Por favor ingresa una contraseña'}
+                  {editingUser
+                    ? "Ingresa una contraseña para actualizarla"
+                    : "Por favor ingresa una contraseña"}
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
@@ -203,7 +205,7 @@ const UserForm = ({
               Cancelar
             </Button>
             <Button variant="primary" type="submit">
-              {editingUser ? 'Actualizar' : 'Guardar'}
+              {editingUser ? "Actualizar" : "Guardar"}
             </Button>
           </div>
         </Form>

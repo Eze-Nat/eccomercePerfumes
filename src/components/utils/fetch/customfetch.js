@@ -4,7 +4,7 @@ export const customFetch = async (
   req_body = null,
   onSuccess = () => {},
   onError = () => {},
-  skipAuth = false // <-- nuevo parámetro
+  skipAuth = false
 ) => {
   try {
     const fullUrl = `${
@@ -12,6 +12,7 @@ export const customFetch = async (
     }/${url.replace(/^\//, "")}`;
 
     const token = localStorage.getItem("token");
+    console.log("Token obtenido en customFetch:", token); // linea para retirar
 
     const headers = {
       "Content-Type": "application/json",

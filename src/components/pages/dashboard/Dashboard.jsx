@@ -1,17 +1,18 @@
+import { useAuth } from "../../../../hooks/useAuth";
+import DashboardAdmin from "../../admin/DashboardAdmin";
+import DashboardUser from "./DashboardUser";
+import { Navigate } from "react-router-dom";
 
+const Dashboard = () => {
+  const { isAuth, role } = useAuth();
 
-import Users from "../../users/Users"
-import Navbar from "../navbar/Navbar"
+  if (!isAuth) return <Navigate to="/login" />;
 
+  if (role === "admin") {
+    return <DashboardAdmin />;
+  }
 
-function Dashboard() {
-  
-return (
-    <>
-    {/* <Navbar/>  */}
-    <Users/>
-    </>   
-  )
-}
+  return <DashboardUser />;
+};
 
-export default Dashboard
+export default Dashboard;
