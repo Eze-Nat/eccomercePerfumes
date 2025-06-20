@@ -1,8 +1,13 @@
 .navbar {
-    width: 100%;
-    background-color: var(--color-bg);
-    color: var(--color-text); /
-  }
+  width: 100%;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  position: fixed; /* Cambiado de absolute a fixed */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Asegura que esté por encima del contenido */
+  height: 60px; /* Altura fija para consistencia */
+}
   .navbar-wrapper {
     max-width: 1400px;
     margin: 0 auto;

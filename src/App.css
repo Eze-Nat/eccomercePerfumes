@@ -10,7 +10,21 @@ main {
   justify-content: center;
   width: 100%;
 }
+.gepa {
+  width: 100%;
+  min-height: 100vh; 
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
 
+.routes {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 60px; 
+  flex-grow: 1; 
+}
 /* form {
   align-items: center;
   display: flex;
@@ -25,7 +39,7 @@ main {
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
-  margin-top: 70px;
+  margin-top: 10px;
 }
 
 .perfume {

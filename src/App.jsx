@@ -11,9 +11,10 @@ import "./App.css";
 function App() {
   return (
     <div className="gepa">
-      <ToastContainer />
+    <ToastContainer />
       <Navbar />
-      <Routes>
+    <div className="routes">
+    <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -21,6 +22,8 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
       </Routes>
     </div>
+    </div>
+    
   );
 }
 
