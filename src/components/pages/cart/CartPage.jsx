@@ -1,31 +1,74 @@
-import React from "react";
-import { useCart } from "../../../contexts/CartContextProvider";
+import { useState } from "react";
+import { useCart } from "../../../contexts/cart/CartContextProvider";
 import { Button } from "react-bootstrap";
+import {
+  successNotification,
+  errorNotification,
+} from "../../utils/notifications/Notifications";
+import CheckoutForm from "./CheckoutForm";
 
 const CartPage = () => {
   const { cart, addToCart, removeFromCart, clearCart, decreaseQuantity } =
     useCart();
+
+  const [showForm, setShowForm] = useState(false);
+  const [orderSuccefull, setOrderSuccefull] = useState(false);
+
+  const total = cart.reduce(
+    (acc, item) => acc + item.precio * item.cantidad,
+    0
+  );
 
   const increaseQuantity = (product) => {
     addToCart(product);
   };
 
   const handleClearCart = () => {
-    if (
-      window.confirm(
-        "🗑 ¿Seguro que quieres vaciar todo el carrito? Esta acción no se puede deshacer."
-      )
-    ) {
+    if (window.confirm("Seguro que quieres vaciar el carrito?")) {
       clearCart();
+      successNotification("Carrito vacio!");
     }
   };
+
+  const handleConfirmCheckout = (newOrder) => {
+    customFetch(
+      "/api/order",
+      "POST",
+      newOrder,
+      (data) => {
+        setOrderSuccefull(true);
+        clearCart();
+        setShowForm(false);
+      },
+      (error) => {
+        console.error("Error en el checkout", error);
+        errorNotification("Error al crear la orden");
+      }
+    );
+  };
+
+  if (orderSuccefull) {
+    return (
+      <div className="text-center mt-5">
+        <h2>Gracias por tu compra!</h2>
+        <p>Recibiras todos los detalles por email</p>
+      </div>
+    );
+  }
 
   return (
     <div className="cart-page">
       <h2>Resumen del Carrito</h2>
 
-      {cart.length === 0 ? (
-        <p>Tu carrito está vacío. ¡Agrega algunos perfumes!</p>
+      {showForm ? (
+        <CheckoutForm
+          total={total}
+          cart={cart}
+          onConfirm={handleConfirmCheckout}
+          onCancel={() => setShowForm(false)}
+        />
+      ) : cart.length === 0 ? (
+        <p>Tu carrito está vacío. Agrega algunos perfumes!</p>
       ) : (
         <>
           {cart.map((item) => (
@@ -67,21 +110,29 @@ const CartPage = () => {
             </div>
           ))}
 
-          <Button
-            variant="outline-secondary"
-            className="clear-cart-btn"
-            onClick={handleClearCart}
-          >
-            Vaciar carrito
-          </Button>
+          <div className="cart-summary">
+            <h4 className="total">
+              Total: <strong>${total.toFixed(2)}</strong>
+            </h4>
+          </div>
 
-          <Button
-            variant="success"
-            className="checkout-btn"
-            onClick={() => alert("Función de checkout pendiente 🚀")}
-          >
-            Proceder al pago
-          </Button>
+          <div className="cart-actions">
+            <Button
+              variant="outline-secondary"
+              className="clear-cart-btn"
+              onClick={handleClearCart}
+            >
+              Vaciar carrito
+            </Button>
+
+            <Button
+              variant="success"
+              className="checkout-btn"
+              onClick={() => setShowForm(true)}
+            >
+              Proceder al pago
+            </Button>
+          </div>
         </>
       )}
     </div>

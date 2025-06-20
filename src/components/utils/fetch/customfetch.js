@@ -1,28 +1,38 @@
 export const customFetch = async (
   url,
-  fetch_method,
-  req_body,
-  onSuccess,
-  onError
+  fetch_method = "GET",
+  req_body = null,
+  onSuccess = () => {},
+  onError = () => {},
+  skipAuth = false // <-- nuevo parámetro
 ) => {
   try {
-    
-    const fullUrl = `${import.meta.env.VITE_BASE_SERVER_URL || 'http://localhost:3000'}/${url.replace(/^\//, '')}`;
-    
+    const fullUrl = `${
+      import.meta.env.VITE_BASE_SERVER_URL || "http://localhost:3000"
+    }/${url.replace(/^\//, "")}`;
+
+    const token = localStorage.getItem("token");
+
+    const headers = {
+      "Content-Type": "application/json",
+      ...(token && !skipAuth && { Authorization: `Bearer ${token}` }),
+    };
+
     const response = await fetch(fullUrl, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: fetch_method, 
-      body: req_body ? JSON.stringify(req_body) : undefined, 
+      method: fetch_method,
+      headers,
+      body:
+        fetch_method !== "GET" && req_body
+          ? JSON.stringify(req_body)
+          : undefined,
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const errData = await response.json();
-      throw new Error(errData.message ?? "Hubo un error inesperado");
+      throw new Error(data.error || data.message || "Error en la solicitud");
     }
 
-    const data = await response.json();
     onSuccess(data);
   } catch (error) {
     onError(error);

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useCart } from "../../../contexts/CartContextProvider"; // Importamos el carrito
+import { useCart } from "../../../contexts//cart/CartContextProvider"; // Importamos el carrito
 import "./navbar.css";
 
 const Navbar = ({ onSearchPerfume }) => {
