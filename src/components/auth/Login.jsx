@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { customFetch } from "../utils/fetch/customFetch";
+import { customFetch } from "../utils/fetch/customfetch.js";
 import {
   successNotification,
   errorNotification,
@@ -25,7 +25,7 @@ const Login = () => {
       "POST",
       credentials,
       (data) => {
-        login(data.token); // Actualizamos el contexto y localStorage
+        login(data.token,data.user); // Actualizamos el contexto y localStorage
         successNotification("¡Inicio de sesión exitoso!");
         navigate("/dashboard");
         setLoading(false);

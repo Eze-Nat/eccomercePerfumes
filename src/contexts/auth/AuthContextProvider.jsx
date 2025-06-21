@@ -10,17 +10,20 @@ import {
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(getToken());
   const [isAuth, setIsAuth] = useState(isAuthenticated());
+  const [roleName, setRoleName] = useState('');
 
-  const login = (newToken) => {
+  const login = (newToken,newUser) => {
     saveToken(newToken);
     setToken(newToken);
     setIsAuth(true);
+    setRoleName(newUser.role)
   };
 
   const logout = (redirectUrl = "/login") => {
     logoutHelper(redirectUrl);
     setToken(null);
     setIsAuth(false);
+    setRoleName('')
   };
 
   useEffect(() => {
