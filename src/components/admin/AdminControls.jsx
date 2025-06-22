@@ -1,14 +1,21 @@
 import { Form, InputGroup, Button } from "react-bootstrap";
+import { successNotification } from "../utils/notifications/Notifications";
 
 const AdminControls = ({ perfume, onFieldChange, onSave }) => {
+
+  const handleSave = () => {
+    onSave();
+    successNotification("Cambios guardados correctamente");
+  };
+
   return (
     <div className="admin-controls mt-3 p-2 border rounded">
       <Form.Group className="mb-3">
         <Form.Check 
           type="switch"
-          label={perfume.isHidden ? "Producto oculto" : "Producto visible"}
-          checked={!perfume.isHidden}
-          onChange={(e) => onFieldChange("isHidden", !e.target.checked)}
+          label={perfume.active ? "Producto visible" : "Producto oculto"}
+          checked={perfume.active}
+          onChange={(e) => onFieldChange("active", e.target.checked)}
         />
       </Form.Group>
 
@@ -16,7 +23,7 @@ const AdminControls = ({ perfume, onFieldChange, onSave }) => {
         <Form.Control
           type="number"
           min="0"
-          value={perfume.stock || ""}  // Cambio clave aquí
+          value={perfume.stock || ""}
           onChange={(e) => onFieldChange("stock", parseInt(e.target.value) || 0)}
           placeholder="Stock"
         />
@@ -29,13 +36,13 @@ const AdminControls = ({ perfume, onFieldChange, onSave }) => {
           type="number"
           min="0"
           step="0.01"
-          value={perfume.precio || ""}  // Cambio asi no aparece 0
-          onChange={(e) => onFieldChange("precio", e.target.value)}
+          value={perfume.price || ""}
+          onChange={(e) => onFieldChange("price", parseFloat(e.target.value) || 0)}
           placeholder="Precio"
         />
       </InputGroup>
 
-      <Button variant="success" onClick={onSave}>
+      <Button variant="success" onClick={handleSave}>
         Guardar cambios
       </Button>
     </div>

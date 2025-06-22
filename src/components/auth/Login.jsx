@@ -21,11 +21,12 @@ const Login = () => {
     const credentials = { email, password };
 
     customFetch(
-      "/api/auth/login",
+      "/auth/login",
       "POST",
       credentials,
       (data) => {
-        login(data.token,data.user); // Actualizamos el contexto y localStorage
+        // Cambié esta línea para que pase un solo objeto
+        login({ token: data.token, user: data.user }); 
         successNotification("¡Inicio de sesión exitoso!");
         navigate("/dashboard");
         setLoading(false);

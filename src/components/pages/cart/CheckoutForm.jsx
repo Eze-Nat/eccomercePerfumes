@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { customFetch } from "../../utils/fetch/customFetch"; // 🔥 Importamos customFetch
+import { customFetch } from "../../utils/fetch/customfetch"; // 🔥 Importamos customFetch
 
 const CheckoutForm = ({ cart, onConfirm }) => {
   const [formData, setFormData] = useState({
@@ -61,7 +61,7 @@ const CheckoutForm = ({ cart, onConfirm }) => {
     };
 
     customFetch(
-      "/api/order",
+      "/order",
       "POST",
       orderData,
       () => {

@@ -5,20 +5,18 @@ const UserList = ({ users = [], roles = [], onModal, onEdit }) => {
   const [filteredUsers, setFilteredUsers] = useState(users);
   const [searchTerm, setSearchTerm] = useState('');
 
-
-const handleUsersFilter = (newSearchTerm) => {
-    const filtered = users.filter(user => 
-      `${user.first_name} ${user.last_name}`
-        .toLowerCase()
-        .includes(newSearchTerm.toLowerCase())
-    );
-    setFilteredUsers(filtered);
-  }
-
-  const handleOnChange = (e) => {
-    setSearchTerm(e.target.value);
-    handleUsersFilter(e.target.value);
-  }
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = users.filter(user =>
+        `${user.first_name} ${user.last_name}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    } else {
+      setFilteredUsers(users);
+    }
+  }, [users, searchTerm]);
 
   const getRoleName = (roleId) => {
     const role = roles.find(r => r.id === roleId);
@@ -34,7 +32,7 @@ const handleUsersFilter = (newSearchTerm) => {
             <FormControl
               placeholder="Buscar por Nombre y/o Apellido..."
               value={searchTerm}
-              onChange={handleOnChange}
+              onChange={e => setSearchTerm(e.target.value)}
             />
           </InputGroup>
         </div>
@@ -52,17 +50,17 @@ const handleUsersFilter = (newSearchTerm) => {
                     <Card.Title>
                       {user.first_name} {user.last_name}
                     </Card.Title>
-                    <Card.Text>
+                    <div>
                       <div><strong>Email:</strong> {user.email}</div>
-                      <div><strong>Celular:</strong> {user.phone}</div>
+                      <div><strong>Celular:</strong> {user.phone || 'No especificado'}</div>
                       <div>
-                        <strong>Rol:</strong> {' '}
-                        <Badge bg={user.rolId === 1 ? 'primary' : 'secondary'}>
-                          {getRoleName(user.rolId)}
+                        <strong>Rol:</strong>{' '}
+                        <Badge bg={user.role_id === 1 ? 'primary' : 'secondary'}>
+                          {user.Role?.name || getRoleName(user.role_id)}
                         </Badge>
                       </div>
-                    </Card.Text>
-                    <div className="d-flex justify-content-end">
+                    </div>
+                    <div className="d-flex justify-content-end mt-3">
                       <Button 
                         variant="outline-primary" 
                         size="sm" 

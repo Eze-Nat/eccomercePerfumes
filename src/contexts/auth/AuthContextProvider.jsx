@@ -12,12 +12,12 @@ const AuthProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(isAuthenticated());
   const [roleName, setRoleName] = useState('');
 
-  const login = (newToken,newUser) => {
-    saveToken(newToken);
-    setToken(newToken);
-    setIsAuth(true);
-    setRoleName(newUser.role)
-  };
+const login = ({ token, user }) => {
+  saveToken(token);
+  setToken(token);
+  setIsAuth(true);
+  setRoleName(user.role);
+};
 
   const logout = (redirectUrl = "/login") => {
     logoutHelper(redirectUrl);
@@ -37,7 +37,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token, isAuth, login, logout }}>
+    <AuthContext.Provider value={{ token, isAuth, roleName, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
