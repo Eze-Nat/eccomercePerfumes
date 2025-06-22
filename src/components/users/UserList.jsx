@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, InputGroup, FormControl, Badge, Alert, Button } from 'react-bootstrap';
 
 const UserList = ({ users = [], roles = [], onModal, onEdit }) => {
@@ -8,11 +8,12 @@ const UserList = ({ users = [], roles = [], onModal, onEdit }) => {
 
 const handleUsersFilter = (newSearchTerm) => {
     const filtered = users.filter(user => 
-      `${user.first_name} ${user.last_name}`
+      `${user.first_name} ${user.last_name} ${user.email} ${user.address}`
         .toLowerCase()
         .includes(newSearchTerm.toLowerCase())
     );
     setFilteredUsers(filtered);
+    console.log(filtered)
   }
 
   const handleOnChange = (e) => {
@@ -20,8 +21,8 @@ const handleUsersFilter = (newSearchTerm) => {
     handleUsersFilter(e.target.value);
   }
 
-  const getRoleName = (roleId) => {
-    const role = roles.find(r => r.id === roleId);
+  const getRoleName = (role_id) => {
+    const role = roles.find(r => r.id === role_id);
     return role ? role.name : 'Desconocido';
   };
 
@@ -32,7 +33,7 @@ const handleUsersFilter = (newSearchTerm) => {
           <h4 className="mb-0">Lista de Usuarios</h4>
           <InputGroup style={{ width: '300px' }}>
             <FormControl
-              placeholder="Buscar por Nombre y/o Apellido..."
+              placeholder="Buscar por Nombre, Apellido, Email o Dirección..."
               value={searchTerm}
               onChange={handleOnChange}
             />
@@ -51,14 +52,21 @@ const handleUsersFilter = (newSearchTerm) => {
                   <Card.Body>
                     <Card.Title>
                       {user.first_name} {user.last_name}
+                      <Badge 
+                        bg={user.active ? "success" : "danger"} 
+                        className="ms-2"
+                      >
+                        {user.active ? "Activo" : "Inactivo"}
+                      </Badge>
                     </Card.Title>
                     <Card.Text>
                       <div><strong>Email:</strong> {user.email}</div>
                       <div><strong>Celular:</strong> {user.phone}</div>
+                      <div><strong>Dirección:</strong> {user.address || 'Sin dirección'}</div>
                       <div>
                         <strong>Rol:</strong> {' '}
-                        <Badge bg={user.rolId === 1 ? 'primary' : 'secondary'}>
-                          {getRoleName(user.rolId)}
+                        <Badge bg={user.role_Id === 1 ? 'primary' : 'secondary'}>
+                          {getRoleName(user.role_Id)}
                         </Badge>
                       </div>
                     </Card.Text>

@@ -9,14 +9,16 @@ const UserForm = ({
     last_name: '',
     email: '',
     phone: '',
-    rolId: '',
+    role_id: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    active: true,        // Nuevo valor por defecto
+    address: ''          // Nuevo valor por defecto
   },
   onCancel = () => {},
   onSuccess = () => {},
   onError = () => {},
-  roles = [{ id: 1, name: 'Usuario' }]
+  roles = [{ id: 3, name: 'Usuario' }]
 }) => {
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,16 +26,21 @@ const UserForm = ({
     last_name: userData.last_name,
     email: userData.email,
     phone: userData.phone,
-    rolId: userData.rolId || (roles.length > 0 ? roles[0].id : ''),
+    role_id: userData.role_id || (roles.length > 0 ? roles[0].id : ''),
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    active: userData.active !== undefined ? userData.active : true, 
+    address: userData.address || ''
   });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+    
+    const inputValue = type === 'checkbox' ? checked : value;
+    
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: inputValue
     }));
   };
 
@@ -43,7 +50,7 @@ const UserForm = ({
     
     // Asignar rol por defecto si no es admin
     const finalFormData = !isAdmin 
-      ? { ...formData, rolId: '1' } 
+      ? { ...formData, role_id: '3' } 
       : formData;
 
     if (form.checkValidity() === false) {
@@ -139,14 +146,49 @@ const UserForm = ({
             </Col>
           </Row>
 
+          {/* Nuevos campos: active y address */}
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="address">
+                <Form.Label>Dirección</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Por favor ingresa una dirección
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="active">
+                <Form.Label>Estado</Form.Label>
+                <div className="mt-2">
+                  <Form.Check 
+                    type="switch"
+                    id="active-switch"
+                    label="Usuario activo"
+                    name="active"
+                    checked={formData.active}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </Form.Group>
+            </Col>
+          </Row>
+
           {isAdmin && (
             <Row>
               <Col md={6}>
-                <Form.Group className="mb-3" controlId="rolId">
+                <Form.Group className="mb-3" controlId="role_id">
                   <Form.Label>Rol</Form.Label>
                   <Form.Select
-                    name="rolId"
-                    value={formData.rolId}
+                    name="role_id"
+                    value={formData.role_id}
                     onChange={handleInputChange}
                     required
                   >
