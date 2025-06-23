@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 import AuthContext from "./Auth.Context";
 import {
   getToken,
@@ -6,42 +7,31 @@ import {
   saveToken,
   logout as logoutHelper,
 } from "../../helpers/auth.helpers";
-import { jwtDecode } from "jwt-decode";
 
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(getToken());
   const [isAuth, setIsAuth] = useState(isAuthenticated());
-  const [role, setRole] = useState(() => {
-    const token = getToken();
-    if (token && token.split(".").length === 3) {
+  const [user, setUser] = useState(() => {
+    const storedToken = getToken();
+    if (storedToken) {
       try {
-        const decoded = jwtDecode(token);
-        return decoded?.role || null;
-      } catch (error) {
-        console.error("Token inválido al inicializar:", error.message);
+        return jwtDecode(storedToken);
+      } catch (err) {
+        console.error("Error al decodificar el token inicial:", err.message);
       }
-    } else {
-      console.warn("Token inválido o mal formado:", token);
     }
     return null;
   });
 
   const login = (newToken) => {
-    if (newToken && newToken.split(".").length === 3) {
-      try {
-        const decoded = jwtDecode(newToken);
-        saveToken(newToken);
-        setToken(newToken);
-        setIsAuth(true);
-        setRole(decoded?.role || null);
-      } catch (error) {
-        console.error(
-          "Error al decodificar token durante login:",
-          error.message
-        );
-      }
-    } else {
-      console.warn("Token recibido en login no es válido:", newToken);
+    try {
+      const decoded = jwtDecode(newToken);
+      saveToken(newToken);
+      setToken(newToken);
+      setIsAuth(true);
+      setUser(decoded);
+    } catch (err) {
+      console.error("Login fallido, token inválido:", err.message);
     }
   };
 
@@ -49,13 +39,19 @@ const AuthProvider = ({ children }) => {
     logoutHelper(redirectUrl);
     setToken(null);
     setIsAuth(false);
-    setRole(null);
+    setUser(null);
   };
 
   useEffect(() => {
     const syncAuth = () => {
-      setToken(getToken());
+      const currentToken = getToken();
+      setToken(currentToken);
       setIsAuth(isAuthenticated());
+      try {
+        setUser(currentToken ? jwtDecode(currentToken) : null);
+      } catch {
+        setUser(null);
+      }
     };
 
     window.addEventListener("storage", syncAuth);
@@ -63,7 +59,16 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token, isAuth, role, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        isAuth,
+        userData: user,
+        role: user?.role || null,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

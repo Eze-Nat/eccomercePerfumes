@@ -9,6 +9,7 @@ const UserForm = ({
     last_name: "",
     email: "",
     phone: "",
+    address: "",
     role_id: "",
     password: "",
     confirmPassword: "",
@@ -24,6 +25,7 @@ const UserForm = ({
     last_name: userData.last_name,
     email: userData.email,
     phone: userData.phone,
+    address: userData.address,
     role_id: userData.role_id || (roles.length > 0 ? roles[0].id : ""),
     password: "",
     confirmPassword: "",
@@ -123,6 +125,20 @@ const UserForm = ({
               </Form.Group>
             </Col>
             <Col md={6}>
+              <Form.Group className="mb-3" controlId="address">
+                <Form.Label>Dirección</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  Por favor ingresa una dirección
+                </Form.Control.Feedback>
+              </Form.Group>
+
               <Form.Group className="mb-3" controlId="phone">
                 <Form.Label>Celular</Form.Label>
                 <Form.Control

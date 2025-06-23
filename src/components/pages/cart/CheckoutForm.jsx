@@ -1,97 +1,79 @@
-import { jwtDecode } from "jwt-decode";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useAuth } from "../../../hooks/useAuth";
+import {
+  successNotification,
+  errorNotification,
+} from "../../utils/notifications/Notifications";
+import { customFetch } from "../../utils/fetch/customFetch";
+import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { customFetch } from "../../utils/fetch/customFetch"; // 🔥 Importamos customFetch
 
-const CheckoutForm = ({ cart, onConfirm }) => {
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    address: "",
-    paymentMethod: "Tarjeta", // 🔄 Valor por defecto
-  });
-
+const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
+  const { userData } = useAuth();
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login"); // 🔄 Redirigir al login si no está autenticado
+  const handleSubmit = async () => {
+    if (!userData?.id) {
+      errorNotification("Debes estar logueado para realizar una compra.");
+      navigate("/login");
       return;
     }
 
-    const userData = jwtDecode(token); // 🔥 Decodificar el token
-    setFormData({
-      first_name: userData.first_name || "",
-      last_name: userData.last_name || "",
-      email: userData.email || "",
-      address: userData.address || "",
-      paymentMethod: "Tarjeta",
-    });
-  }, []);
-
-  const handlePaymentChange = (e) => {
-    setFormData({ ...formData, paymentMethod: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (
-      !formData.first_name ||
-      !formData.last_name ||
-      !formData.email ||
-      !formData.address
-    ) {
-      console.error("Faltan datos en el formulario");
-      return;
-    }
+    setIsSubmitting(true);
 
     const orderData = {
-      user_id: jwtDecode(localStorage.getItem("token")).id, // 🔥 Obtener ID de usuario desde el token
-      total: cart.reduce((acc, item) => acc + item.precio * item.cantidad, 0),
-      shippingAddress: formData.address,
-      paymentMethod: formData.paymentMethod, // 🔥 Enviar el método de pago elegido
+      user_id: userData.id,
+      address: userData.address,
+      total,
       items: cart.map((item) => ({
-        productoId: item.id,
-        cantidad: item.cantidad,
-        precio: item.precio,
+        product_id: item.id,
+        quantity: item.cantidad,
+        unitPrice: item.precio,
       })),
     };
 
-    customFetch(
-      "/api/order",
-      "POST",
-      orderData,
-      () => {
-        console.log("Orden confirmada");
-        onConfirm();
-      },
-      (error) => console.error("Error al confirmar la orden:", error)
-    );
+    try {
+      const response = await customFetch("/api/order", "POST", orderData);
+      successNotification("Orden creada exitosamente");
+      onConfirm(response); // muestra el resumen desde CartPage
+    } catch (error) {
+      console.error("Error al enviar la orden:", error);
+      errorNotification("Ocurrió un error al procesar la compra.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h4>Información de envío</h4>
+    <div className="checkout-form">
+      <h3>Confirmar Compra</h3>
+      <p>
+        <strong>Nombre:</strong> {userData?.name}
+      </p>
+      <p>
+        <strong>Email:</strong> {userData?.email}
+      </p>
+      <p>
+        <strong>Dirección:</strong> {userData?.address}
+      </p>
+      <p>
+        <strong>Total:</strong> ${total.toFixed(2)}
+      </p>
 
-      <input type="text" value={formData.first_name} readOnly />
-      <input type="text" value={formData.last_name} readOnly />
-      <input type="email" value={formData.email} readOnly />
-      <input type="text" value={formData.address} readOnly />
-
-      <h4>Método de pago</h4>
-      <select value={formData.paymentMethod} onChange={handlePaymentChange}>
-        <option value="Tarjeta">Tarjeta de crédito</option>
-        <option value="Efectivo">Efectivo</option>
-      </select>
-
-      <button type="submit">Confirmar orden</button>
-      <button type="button" onClick={() => navigate("/")}>
-        Cancelar
-      </button>
-    </form>
+      <div className="checkout-actions">
+        <Button variant="secondary" onClick={onCancel} disabled={isSubmitting}>
+          Cancelar
+        </Button>
+        <Button
+          variant="success"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Enviando..." : "Finalizar compra"}
+        </Button>
+      </div>
+    </div>
   );
 };
 
