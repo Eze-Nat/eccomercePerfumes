@@ -5,7 +5,7 @@ import DashboardUser from "./DashboardUser";
 const Dashboard = () => {
   const { isAuth, isTokenExpired , hasRole } = useAuth();
 
-  if (hasRole("admin")) {
+  if (hasRole(["superadmin","admin"])) {
     return <DashboardAdmin />;
   } 
   if (hasRole("user")) {

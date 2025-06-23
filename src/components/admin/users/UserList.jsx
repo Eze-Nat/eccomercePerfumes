@@ -20,9 +20,11 @@ const handleUsersFilter = (newSearchTerm) => {
     setSearchTerm(e.target.value);
     handleUsersFilter(e.target.value);
   }
+  console.log(users);
+  console.log(roles);
 
   const getRoleName = (role_id) => {
-    const role = roles.find(r => r.id === role_id);
+    const role = roles.find(r => r.id === Number(role_id));
     return role ? role.name : 'Desconocido';
   };
 
@@ -65,8 +67,8 @@ const handleUsersFilter = (newSearchTerm) => {
                       <div><strong>Dirección:</strong> {user.address || 'Sin dirección'}</div>
                       <div>
                         <strong>Rol:</strong> {' '}
-                        <Badge bg={user.role_Id === 1 ? 'primary' : 'secondary'}>
-                          {getRoleName(user.role_Id)}
+                        <Badge bg={user.role_id === 1 ? 'primary' : 'secondary'}>
+                          {getRoleName(user.role_id)}
                         </Badge>
                       </div>
                     </Card.Text>

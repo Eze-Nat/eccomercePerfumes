@@ -8,9 +8,14 @@ const useAuth = () => {
 
   const { token, isAuth, userData, login, logout } = context;
 
-  const hasRole = (role) => {
+  const hasRole = (roles) => {
     if (!userData?.role) return false;
-    return userData.role === role;
+    
+    if (Array.isArray(roles)) {
+      return roles.includes(userData.role);
+    }
+    
+    return userData.role === roles;
   };
 
   const isTokenExpired = () => {
