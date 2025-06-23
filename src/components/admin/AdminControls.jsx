@@ -1,11 +1,11 @@
 import { Form, InputGroup, Button } from "react-bootstrap";
-import { successNotification } from "../utils/notifications/Notifications";
+
 
 const AdminControls = ({ perfume, onFieldChange, onSave }) => {
 
   const handleSave = () => {
     onSave();
-    successNotification("Cambios guardados correctamente");
+
   };
 
   return (
@@ -41,6 +41,37 @@ const AdminControls = ({ perfume, onFieldChange, onSave }) => {
           placeholder="Precio"
         />
       </InputGroup>
+
+      <Form.Group className="mb-3">
+  <Form.Label>Título</Form.Label>
+  <Form.Control
+    type="text"
+    value={perfume.name}
+    onChange={(e) => onFieldChange("name", e.target.value)}
+    placeholder="Título del perfume"
+  />
+</Form.Group>
+
+<Form.Group className="mb-3">
+  <Form.Label>Descripción</Form.Label>
+  <Form.Control
+    as="textarea"
+    rows={3}
+    value={perfume.description}
+    onChange={(e) => onFieldChange("description", e.target.value)}
+    placeholder="Descripción del perfume"
+  />
+</Form.Group>
+
+<InputGroup className="mb-3">
+  <InputGroup.Text>📸</InputGroup.Text>
+  <Form.Control
+    type="text"
+    value={perfume.mainImage || ""}
+    onChange={(e) => onFieldChange("mainImage", e.target.value)}
+    placeholder="/lattafa/lattafa_yara_pink_edp_100ml.jpg"
+  />
+</InputGroup>
 
       <Button variant="success" onClick={handleSave}>
         Guardar cambios

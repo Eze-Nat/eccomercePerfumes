@@ -15,7 +15,7 @@ const PerfumeCard = ({ perfume = {}, isAdmin = false, onUpdateProduct }) => {
     stock: parseInt(perfume.stock) || 0,
     brand: perfume.brand || "",
     category: perfume.category || "",
-    active: true,
+    active: perfume.active ?? true,
   });
 
     useEffect(() => {
@@ -34,12 +34,12 @@ const PerfumeCard = ({ perfume = {}, isAdmin = false, onUpdateProduct }) => {
 
   const [showAdminControls, setShowAdminControls] = useState(false);
 
-  const handleFieldChange = (field, value) => {
-    setCurrentPerfume((prev) => ({
-      ...prev,
-      [field]: field === "price" || field === "stock" ? parseFloat(value) || 0 : value,
-    }));
-  };
+const handleFieldChange = (field, value) => {
+  setCurrentPerfume((prev) => ({
+    ...prev,
+    [field]: field === "price" || field === "stock" ? parseFloat(value) || 0 : value,
+  }));
+};
 
 const handleSaveChanges = async () => {
   try {
