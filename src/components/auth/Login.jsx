@@ -18,7 +18,7 @@ const Login = () => {
     const credentials = { email, password };
 
     customFetch(
-      "/api/auth/login",
+      "/auth/login",
       "POST",
       credentials,
       (data) => {

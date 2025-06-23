@@ -37,7 +37,7 @@ const handleUsersFilter = (newSearchTerm) => {
             <FormControl
               placeholder="Buscar por Nombre, Apellido, Email o Dirección..."
               value={searchTerm}
-              onChange={handleOnChange}
+              onChange={e => setSearchTerm(e.target.value)}
             />
           </InputGroup>
         </div>
@@ -61,18 +61,17 @@ const handleUsersFilter = (newSearchTerm) => {
                         {user.active ? "Activo" : "Inactivo"}
                       </Badge>
                     </Card.Title>
-                    <Card.Text>
+                    <div>
                       <div><strong>Email:</strong> {user.email}</div>
                       <div><strong>Celular:</strong> {user.phone}</div>
-                      <div><strong>Dirección:</strong> {user.address || 'Sin dirección'}</div>
                       <div>
                         <strong>Rol:</strong> {' '}
-                        <Badge bg={user.role_id === 1 ? 'primary' : 'secondary'}>
-                          {getRoleName(user.role_id)}
+                        <Badge bg={user.rolId === 1 ? 'primary' : 'secondary'}>
+                          {getRoleName(user.rolId)}
                         </Badge>
                       </div>
-                    </Card.Text>
-                    <div className="d-flex justify-content-end">
+                    </div>
+                    <div className="d-flex justify-content-end mt-3">
                       <Button 
                         variant="outline-primary" 
                         size="sm" 
