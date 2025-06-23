@@ -1,11 +1,11 @@
-import { Button, Container } from "react-bootstrap";
-import { useNavigate } from "react-router";
+import { Button, Container, Card } from "react-bootstrap";
+import { useNavigate } from "react-router-dom"; 
 
 const NotFound = () => {
     const navigate = useNavigate();
 
     const goBackHome = () => {
-        navigate("/", { replace: true });
+        navigate("/", { replace: true }); 
     };
 
     return (
@@ -18,14 +18,15 @@ const NotFound = () => {
                     <Card.Text>
                         ¡Ups! La página solicitada no fue encontrada
                     </Card.Text>
-                    <Button className="text-center" onClick={goBackHome}>
-                        Volver a iniciar sesión
-                    </Button>
+                    <div className="text-center">
+                        <Button onClick={goBackHome}>
+                            Volver al inicio
+                        </Button>
+                    </div>
                 </Card.Body>
             </Card>
         </Container>
     );
 };
-
 
 export default NotFound;

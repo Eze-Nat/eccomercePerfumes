@@ -9,35 +9,35 @@ import CartPage from "./components/pages/cart/CartPage.jsx";
 import Navbar from "./components/pages/navbar/Navbar";
 import NotFound from "./components/routes/notFound/NotFound.jsx";
 import UserListContainer from "./components/admin/users/UserListContainer.jsx"
-import ProtectedLogin from "./components/routes/protected/ProtectedLogin.jsx";
+import ProtectedLogin from "./components/routes/protectedLogin/ProtectedLogin.jsx";
 
 import "./App.css";
 
 function App() {
   return (
     <div className="gepa">
-    <ToastContainer />
+      <ToastContainer />
       <Navbar />
-    <div className="routes">
-    <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
-        
+      <div className="routes">
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes */}
-        <Route element={<ProtectedLogin />}>
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/users" element={<UserListContainer />} />
-        </Route>
+          {/* Authenticated Routes */}
+          <Route element={<ProtectedLogin />}>
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/users" element={<UserListContainer />} />          
+          </Route>
 
-      </Routes>
+          {/* 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
     </div>
-    </div>
-    
+
   );
 }
 
