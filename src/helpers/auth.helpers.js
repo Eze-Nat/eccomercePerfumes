@@ -1,12 +1,25 @@
-export const getToken = () => localStorage.getItem("token");
+const TOKEN_KEY = "token";
 
 export const saveToken = (token) => {
-  localStorage.setItem("token", token);
+  localStorage.setItem(TOKEN_KEY, token);
 };
 
-export const isAuthenticated = () => !!getToken();
+export const getToken = () => {
+  return localStorage.getItem(TOKEN_KEY);
+};
+
+export const removeToken = () => {
+  localStorage.removeItem(TOKEN_KEY);
+};
+
+export const isAuthenticated = () => {
+  const token = getToken();
+  return !!token;
+};
 
 export const logout = (redirectUrl = "/login") => {
-  localStorage.removeItem("token");
-  window.location.href = redirectUrl;
+  removeToken();
+  if (redirectUrl) {
+    window.location.href = redirectUrl;
+  }
 };

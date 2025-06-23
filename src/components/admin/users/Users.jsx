@@ -1,99 +1,142 @@
-import { useState } from "react";
-import { Container, Alert, Button, Row, Col, Modal } from "react-bootstrap";
-import { customFetch } from "../../utils/fetch/customFetch";
-
-import UserForm from "./UserForm";
-import UserList from "./UserList";
+import { useEffect, useState } from 'react';
+import { Container, Button, Row, Col, Modal } from 'react-bootstrap';
+import UserForm from './UserForm';
+import UserList from './UserList';
+import { customFetch } from '../../utils/fetch/customFetch.js';
+import { errorNotification, successNotification } from '../../utils/notifications/Notifications.jsx';
 
 const Users = () => {
   const [showForm, setShowForm] = useState(false);
   const [showList, setShowList] = useState(false);
-  const [alert, setAlert] = useState({
-    show: false,
-    message: "",
-    variant: "success",
-  });
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
-  const [userData, setUserData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    rolId: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [idEditUser, setIdEditUser] = useState(null);
 
-  const showAlert = (message, variant) => {
-    setAlert({ show: true, message, variant });
-    setTimeout(() => setAlert((prev) => ({ ...prev, show: false })), 3000);
-  };
+  const [userData, setUserData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    role_id: '',
+    password: '',
+    confirmPassword: '',
+    active: true,
+    address: ''
+  });
 
   const fetchRoles = async () => {
     customFetch(
-      "api/roles",
+      "/api/roles/",
       "GET",
       null,
-      (data) => setRoles(data),
-      (err) => showAlert("Error al cargar los roles", "danger")
+      (data) => {
+        setRoles(data);
+      },
+      (error) => {
+        const mensaje =
+          error?.message || error?.error || "Error al traer los roles.";
+        errorNotification(mensaje);
+        console.error("Error al traer los roles:", error);
+      }
     );
   };
 
   const fetchUsers = async () => {
     customFetch(
-      "api/users",
+      "/api/users/",
       "GET",
       null,
-      (data) => setUsers(data),
-      (err) => showAlert("Error al cargar los usuarios", "danger")
+      (data) => {
+        setUsers(data);
+      },
+      (error) => {
+        const mensaje =
+          error?.message || error?.error || "Error al traer los usuarios.";
+        errorNotification(mensaje);
+        console.error("Error al traer los usuarios:", error);
+      }
     );
   };
 
+  useEffect(() => {
+    fetchRoles();
+    fetchUsers();
+  }, []);
+
   const handleShowForm = () => {
-    if (!showForm && roles.length === 0) {
-      fetchRoles();
-    }
     setShowForm(!showForm);
     setIsEditing(false);
     clearUserData();
   };
 
   const handleListForm = () => {
-    if (!showList && users.length === 0) {
-      fetchUsers();
-    }
     setShowList(!showList);
   };
 
   const clearUserData = () => {
     setUserData({
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
-      rolId: "",
-      password: "",
-      confirmPassword: "",
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone: '',
+      role_id: '',
+      password: '',
+      confirmPassword: '',
+      active: true,
+      address: ''
     });
   };
 
+
   const handleFormSuccess = (message, newUser) => {
-    showAlert(message, "success");
-    setUsers((prevUsers) => {
-      const lastId =
-        prevUsers.length > 0 ? prevUsers[prevUsers.length - 1].id : 0;
-      const userWithId = { ...newUser, id: lastId + 1 };
-      return [...prevUsers, userWithId];
-    });
-    handleShowForm();
+    successNotification(message);
+
+    if (isEditing) {
+      customFetch(
+        `/api/users/${idEditUser}`,
+        "PUT",
+        newUser,
+        () => {
+          successNotification('Usuario actualizado correctamente')
+          setIdEditUser(null);
+          fetchUsers();
+          handleShowForm();
+        },
+        (error) => {
+          const mensaje =
+            error?.message || error?.error || "Error al actualizar el usuario.";
+          errorNotification(mensaje);
+          console.error("Error al actualizar el usuario", error);
+        }
+      );
+    }
+
+    else {
+      customFetch(
+        `/api/users/`,
+        "POST",
+        newUser,
+        () => {
+          successNotification('Usuario creado correctamente')
+          fetchUsers();
+          handleShowForm();
+        },
+        (error) => {
+          const mensaje =
+            error?.message || error?.error || "Error al crear el usuario.";
+          errorNotification(mensaje);
+          console.error("Error al crear el usuario", error);
+        }
+      );
+    }
+
   };
 
   const handleFormError = (message) => {
-    showAlert(message, "danger");
+    errorNotification(message)
   };
 
   const handleModal = (userToDeleteInfo) => {
@@ -103,84 +146,70 @@ const Users = () => {
 
   const handleDelete = () => {
     if (userToDelete) {
-      try {
-        setUsers((prevUsers) =>
-          prevUsers.filter((user) => user.id !== userToDelete.id)
-        );
-        showAlert("Usuario eliminado correctamente", "success");
-        setShowDeleteModal(false);
-      } catch (error) {
-        showAlert("Error al eliminar el usuario", "danger");
-      }
-    }
+      customFetch(
+        `/api/users/${userToDelete.id}`,
+        "DELETE",
+        null,
+        () => {
+          successNotification('Usuario eliminado correctamente')
+          fetchUsers();
+          setShowDeleteModal(false);
+        },
+        (error) => {
+          const mensaje =
+            error?.message || error?.error || "Error al eliminar el usuario.";
+          errorNotification(mensaje);
+          console.error("Error al eliminar el usuario", error);
+        }
+      );
+    };
   };
-
   const handleEditUser = (user) => {
-    setUserData(user);
+    setIdEditUser(user.id);
+    setUserData({
+      ...user,
+      active: user.active !== undefined ? user.active : true,
+      address: user.address || ''
+    });
     setIsEditing(true);
     setShowForm(true);
   };
 
-  const handleEditSuccess = (message, updatedUser) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-    );
-    showAlert(message, "success");
-    setShowForm(false);
-    clearUserData();
-  };
-
   return (
     <Container fluid className="mt-4">
-      {alert.show && (
-        <Alert
-          variant={alert.variant}
-          onClose={() => setAlert({ ...alert, show: false })}
-          dismissible
-        >
-          {alert.message}
-        </Alert>
-      )}
 
       <Row className="mb-3">
         <Col>
           {!showList && (
             <Button
-              variant={showForm ? "outline-secondary" : "primary"}
+              variant={showForm ? 'outline-secondary' : 'primary'}
               onClick={handleShowForm}
               className="me-2"
             >
-              {showForm ? "Cancelar" : "Añadir Usuario"}
+              {showForm ? 'Cancelar' : 'Añadir Usuario'}
             </Button>
           )}
 
-          <Button variant="info" onClick={handleListForm}>
-            {showList ? "Ocultar Usuarios" : "Mostrar Usuarios"}
+          <Button
+            variant="info"
+            onClick={handleListForm}
+          >
+            {showList ? 'Ocultar Usuarios' : 'Mostrar Usuarios'}
           </Button>
         </Col>
       </Row>
 
-      {showForm &&
-        (isEditing ? (
-          <UserForm
-            isAdmin={true}
-            editingUser={true}
-            userData={userData}
-            roles={roles}
-            onCancel={handleShowForm}
-            onSuccess={handleEditSuccess}
-            onError={handleFormError}
-          />
-        ) : (
-          <UserForm
-            isAdmin={true}
-            roles={roles}
-            onCancel={handleShowForm}
-            userData={userData}
-            onSuccess={handleFormSuccess}
-            onError={handleFormError}
-          />
-        ))}
+      {showForm && (
+        <UserForm
+          isAdmin={true}
+          editingUser={isEditing}
+          userData={userData}
+          roles={roles}
+          onCancel={handleShowForm}
+          onSuccess={handleFormSuccess}
+          onError={handleFormError}
+        />
+      )}
 
       {showList && (
         <UserList
@@ -196,8 +225,7 @@ const Users = () => {
           <Modal.Title>Confirmar Eliminación</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          ¿Estás seguro de que deseas eliminar al usuario{" "}
-          {userToDelete?.first_name} {userToDelete?.last_name}?
+          ¿Estás seguro de que deseas eliminar al usuario {userToDelete?.first_name} {userToDelete?.last_name}?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>

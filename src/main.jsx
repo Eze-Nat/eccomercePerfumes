@@ -15,14 +15,12 @@ import "./App.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        {" "}
-        {/* Envuelve todo con AuthProvider */}
-        <CartContextProvider>
+    <AuthProvider>
+      <CartContextProvider>
+        <BrowserRouter>
           <App />
-        </CartContextProvider>
-      </AuthProvider>
-    </BrowserRouter>
+        </BrowserRouter>
+      </CartContextProvider>
+    </AuthProvider>
   </StrictMode>
 );
