@@ -63,7 +63,7 @@ const Register = () => {
     };
 
     customFetch(
-      "/api/users",
+      "/api/auth/register",
       "POST",
       userData,
       (data) => {
