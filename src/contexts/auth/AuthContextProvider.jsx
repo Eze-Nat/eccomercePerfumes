@@ -6,7 +6,7 @@ import {
   isAuthenticated,
   saveToken,
   logout as logoutHelper,
-} from "../../helpers/auth.helpers";
+} from "../../helpers/auth.helpers.js";
 
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(getToken());

@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { customFetch } from "../utils/fetch/customFetch";
-import {
-  successNotification,
-  errorNotification,
-} from "../utils/notifications/Notifications";
-import { useAuth } from "../../hooks/useAuth";
+import { errorNotification, successNotification } from "../utils/notifications/Notifications";
+import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -21,7 +18,7 @@ const Login = () => {
     const credentials = { email, password };
 
     customFetch(
-      "/api/auth/login",
+      "/auth/login",
       "POST",
       credentials,
       (data) => {

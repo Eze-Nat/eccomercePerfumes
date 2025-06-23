@@ -4,15 +4,14 @@ import DashboardUser from "../dashboard/users/DashboardUser";
 import { Navigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const { isAuth, role } = useAuth();
+  const { isAuth, isTokenExpired, hasRole } = useAuth();
 
-  if (!isAuth) return <Navigate to="/login" />;
-
-  if (role === "admin") {
+  if (hasRole(["superadmin", "admin"])) {
     return <DashboardAdmin />;
   }
-
-  return <DashboardUser />;
+  if (hasRole("user")) {
+    return <DashboardUser />;
+  }
 };
 
 export default Dashboard;

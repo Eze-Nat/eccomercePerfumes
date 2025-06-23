@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from 'react-router-dom';
 import { useCart } from "../../../contexts//cart/CartContextProvider"; // Importamos el carrito
 import "./navbar.css";
 
@@ -40,9 +41,9 @@ const Navbar = ({ onSearchPerfume }) => {
   return (
     <nav className="navbar fixed-top navbar-dark bg-dark px-4">
       <div className="container-fluid">
-        <a className="navbar-brand fw-bold" href="/">
-          Perfumería El Turco
-        </a>
+          <Link className="navbar-brand fw-bold" to="/" replace>
+            Perfumería El Turco
+          </Link>
         <div className="flex-grow-1 d-flex justify-content-center">
           <form className="d-flex" role="search" onSubmit={handleOnSubmit}>
             <input
