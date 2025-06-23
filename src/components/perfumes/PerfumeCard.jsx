@@ -4,8 +4,11 @@ import AdminControls from "../admin/AdminControls";
 import { useCart } from "../../contexts/cart/CartContextProvider";
 import { successNotification, errorNotification } from "../utils/notifications/Notifications";
 import Loader from "../utils/spinner/Loader";
-
+import useAuth from "../../hooks/useAuth"
 const PerfumeCard = ({ perfume = {}, isAdmin = false, onUpdateProduct }) => {
+  
+  const { hasRole } = useAuth();
+  
   const [currentPerfume, setCurrentPerfume] = useState({
     id: perfume.id || "",
     name: perfume.titulo || "",
@@ -92,7 +95,7 @@ const updatedData = {
         Agregar al carrito
       </Button>
 
-      {isAdmin && (
+      {hasRole("admin","superadmin") && (
         <>
           <Button
             variant="outline-danger"
@@ -101,7 +104,6 @@ const updatedData = {
           >
             {showAdminControls ? "Ocultar controles" : "Modificar producto"}
           </Button>
-
           {showAdminControls && (
             <AdminControls
               perfume={currentPerfume}

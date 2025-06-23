@@ -41,7 +41,7 @@ const Navbar = ({ onSearchPerfume }) => {
   return (
     <nav className="navbar fixed-top navbar-dark bg-dark px-4">
       <div className="container-fluid">
-          <Link className="navbar-brand fw-bold" to="/">
+          <Link className="navbar-brand fw-bold" to="/" replace>
             Perfumería El Turco
           </Link>
         <div className="flex-grow-1 d-flex justify-content-center">
