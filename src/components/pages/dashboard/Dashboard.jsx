@@ -1,6 +1,6 @@
 import { useAuth } from "../../../../hooks/useAuth";
 import DashboardAdmin from "../../admin/DashboardAdmin";
-import DashboardUser from "./DashboardUser";
+import DashboardUser from "../dashboard/users/DashboardUser";
 import { Navigate } from "react-router-dom";
 
 const Dashboard = () => {
