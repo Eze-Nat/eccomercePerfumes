@@ -52,11 +52,7 @@ const UserOrderList = () => {
     );
 
   if (orders.length === 0)
-    return (
-      <p className="text-center mt-4">
-        No tenés órdenes de compra registradas.
-      </p>
-    );
+    return <p className="text-center mt-4">No hay órdenes registradas.</p>;
 
   return (
     <>

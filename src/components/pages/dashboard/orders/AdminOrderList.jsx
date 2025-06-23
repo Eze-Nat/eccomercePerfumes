@@ -17,7 +17,7 @@ const AdminOrderList = () => {
   const fetchAllOrders = () => {
     setLoading(true);
     customFetch(
-      "api/order", // todas las órdenes
+      "api/order",
       "GET",
       null,
       (data) => {
@@ -54,7 +54,7 @@ const AdminOrderList = () => {
 
   return (
     <>
-      <h3 className="mb-4">Órdenes de Todos los Usuarios</h3>
+      <h3 className="mb-4">Órdenes de Compra</h3>
 
       <div className="row">
         {orders.map((order) => (

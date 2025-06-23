@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Users from "./users/Users";
-import OrdersDashboard from "../pages/dashboard/orders/OrderDashboard"; // Lo vamos a armar ahora
+import Users from "../../../admin/users/Users";
+import OrdersDashboard from "../orders/OrderDashboard"; // Lo vamos a armar ahora
 import { Button } from "react-bootstrap";
 
 const DashboardAdmin = () => {
   const [showUsers, setShowUsers] = useState(false);
-  const [showOrders, setShowOrders] = useState(true);
+  const [showOrders, setShowOrders] = useState(false);
 
   return (
     <div className="container mt-5">
@@ -18,14 +18,14 @@ const DashboardAdmin = () => {
           onClick={() => setShowUsers(!showUsers)}
           className="me-2"
         >
-          {showUsers ? "Ocultar Gestión de Usuarios" : "Gestionar Usuarios"}
+          {showUsers ? "Ocultar Usuarios" : "Usuarios"}
         </Button>
 
         <Button
           variant={showOrders ? "outline-secondary" : "primary"}
           onClick={() => setShowOrders(!showOrders)}
         >
-          {showOrders ? "Ocultar Órdenes" : "Ver Órdenes"}
+          {showOrders ? "Ocultar Compras" : "Compras"}
         </Button>
       </div>
 
