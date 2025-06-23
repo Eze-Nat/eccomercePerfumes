@@ -1,23 +1,24 @@
-import { useState } from "react";
-import { Card, Form, Row, Col, Button } from "react-bootstrap";
+import { useState } from 'react';
+import { Card, Form, Row, Col, Button } from 'react-bootstrap';
 
 const UserForm = ({
   isAdmin = false,
   editingUser = false,
   userData = {
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    address: "",
-    role_id: "",
-    password: "",
-    confirmPassword: "",
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    role_id: '',
+    password: '',
+    confirmPassword: '',
+    active: true,        // Nuevo valor por defecto
+    address: ''          // Nuevo valor por defecto
   },
   onCancel = () => {},
   onSuccess = () => {},
   onError = () => {},
-  roles = [{ id: 1, name: "Usuario" }],
+  roles = [{ id: 3, name: 'Usuario' }]
 }) => {
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,26 +26,32 @@ const UserForm = ({
     last_name: userData.last_name,
     email: userData.email,
     phone: userData.phone,
-    address: userData.address,
-    role_id: userData.role_id || (roles.length > 0 ? roles[0].id : ""),
-    password: "",
-    confirmPassword: "",
+    role_id: userData.role_id || (roles.length > 0 ? roles[0].id : ''),
+    password: '',
+    confirmPassword: '',
+    active: userData.active !== undefined ? userData.active : true, 
+    address: userData.address || ''
   });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
+    const { name, value, type, checked } = e.target;
+    
+    const inputValue = type === 'checkbox' ? checked : value;
+    
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: inputValue
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-
-    // Asignar role_id por defecto si no es admin
-    const finalFormData = !isAdmin ? { ...formData, role_id: 1 } : formData;
+    
+    // Asignar rol por defecto si no es admin
+    const finalFormData = !isAdmin 
+      ? { ...formData, role_id: '3' } 
+      : formData;
 
     if (form.checkValidity() === false) {
       e.stopPropagation();
@@ -53,27 +60,25 @@ const UserForm = ({
     }
 
     if (formData.password !== formData.confirmPassword) {
-      onError("Las contraseñas no coinciden");
+      onError('Las contraseñas no coinciden');
       return;
     }
 
     try {
-      const successMessage = editingUser
-        ? "Usuario actualizado correctamente"
-        : "Usuario creado correctamente";
-
+      const successMessage = editingUser 
+        ? 'Usuario actualizado correctamente' 
+        : 'Usuario creado correctamente';
+      
       onSuccess(successMessage, finalFormData);
     } catch (error) {
-      onError("Error al guardar el usuario");
+      onError('Error al guardar el usuario');
     }
   };
 
   return (
     <Card className="mb-4">
       <Card.Body>
-        <h4 className="mb-4">
-          {editingUser ? "Editar Usuario" : "Añadir Nuevo Usuario"}
-        </h4>
+        <h4 className="mb-4">{editingUser ? 'Editar Usuario' : 'Añadir Nuevo Usuario'}</h4>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row>
             <Col md={6}>
@@ -125,20 +130,6 @@ const UserForm = ({
               </Form.Group>
             </Col>
             <Col md={6}>
-              <Form.Group className="mb-3" controlId="address">
-                <Form.Label>Dirección</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  Por favor ingresa una dirección
-                </Form.Control.Feedback>
-              </Form.Group>
-
               <Form.Group className="mb-3" controlId="phone">
                 <Form.Label>Celular</Form.Label>
                 <Form.Control
@@ -155,6 +146,41 @@ const UserForm = ({
             </Col>
           </Row>
 
+          {/* Nuevos campos: active y address */}
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="address">
+                <Form.Label>Dirección</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Por favor ingresa una dirección
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="active">
+                <Form.Label>Estado</Form.Label>
+                <div className="mt-2">
+                  <Form.Check 
+                    type="switch"
+                    id="active-switch"
+                    label="Usuario activo"
+                    name="active"
+                    checked={formData.active}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </Form.Group>
+            </Col>
+          </Row>
+
           {isAdmin && (
             <Row>
               <Col md={6}>
@@ -167,7 +193,7 @@ const UserForm = ({
                     required
                   >
                     <option value="">Seleccione un rol</option>
-                    {roles.map((role) => (
+                    {roles.map(role => (
                       <option key={role.id} value={role.id}>
                         {role.name}
                       </option>
@@ -178,7 +204,7 @@ const UserForm = ({
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-            </Row>
+            </Row>          
           )}
 
           <Row>
@@ -193,9 +219,7 @@ const UserForm = ({
                   required={!editingUser}
                 />
                 <Form.Control.Feedback type="invalid">
-                  {editingUser
-                    ? "Ingresa una contraseña para actualizarla"
-                    : "Por favor ingresa una contraseña"}
+                  {editingUser ? 'Ingresa una contraseña para actualizarla' : 'Por favor ingresa una contraseña'}
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
@@ -221,7 +245,7 @@ const UserForm = ({
               Cancelar
             </Button>
             <Button variant="primary" type="submit">
-              {editingUser ? "Actualizar" : "Guardar"}
+              {editingUser ? 'Actualizar' : 'Guardar'}
             </Button>
           </div>
         </Form>
