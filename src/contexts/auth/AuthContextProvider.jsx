@@ -10,20 +10,17 @@ import {
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(getToken());
   const [isAuth, setIsAuth] = useState(isAuthenticated());
-  const [roleName, setRoleName] = useState('');
 
-  const login = (newToken,newUser) => {
+  const login = (newToken) => {
     saveToken(newToken);
     setToken(newToken);
     setIsAuth(true);
-    setRoleName(newUser.role)
   };
 
   const logout = (redirectUrl = "/login") => {
     logoutHelper(redirectUrl);
     setToken(null);
     setIsAuth(false);
-    setRoleName('')
   };
 
   useEffect(() => {
@@ -37,7 +34,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token, isAuth, roleName, login, logout }}>
+    <AuthContext.Provider value={{ token, isAuth, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
