@@ -10,48 +10,34 @@ import CheckoutForm from "./CheckoutForm";
 const CartPage = () => {
   const { cart, addToCart, removeFromCart, clearCart, decreaseQuantity } =
     useCart();
-
   const [showForm, setShowForm] = useState(false);
-  const [orderSuccefull, setOrderSuccefull] = useState(false);
+  const [orderSuccessful, setOrderSuccessful] = useState(false);
 
   const total = cart.reduce(
     (acc, item) => acc + item.precio * item.cantidad,
     0
   );
 
-  const increaseQuantity = (product) => {
-    addToCart(product);
-  };
+  const increaseQuantity = (product) => addToCart(product);
 
   const handleClearCart = () => {
-    if (window.confirm("Seguro que quieres vaciar el carrito?")) {
+    if (window.confirm("¿Seguro que quieres vaciar el carrito?")) {
       clearCart();
-      successNotification("Carrito vacio!");
+      successNotification("Carrito vacío!");
     }
   };
 
-  const handleConfirmCheckout = (newOrder) => {
-    customFetch(
-      "/api/order",
-      "POST",
-      newOrder,
-      (data) => {
-        setOrderSuccefull(true);
-        clearCart();
-        setShowForm(false);
-      },
-      (error) => {
-        console.error("Error en el checkout", error);
-        errorNotification("Error al crear la orden");
-      }
-    );
+  const handleConfirmCheckout = () => {
+    setOrderSuccessful(true);
+    clearCart();
+    setShowForm(false);
   };
 
-  if (orderSuccefull) {
+  if (orderSuccessful) {
     return (
       <div className="text-center mt-5">
-        <h2>Gracias por tu compra!</h2>
-        <p>Recibiras todos los detalles por email</p>
+        <h2>¡Gracias por tu compra!</h2>
+        <p>Recibirás todos los detalles por email.</p>
       </div>
     );
   }
@@ -68,7 +54,7 @@ const CartPage = () => {
           onCancel={() => setShowForm(false)}
         />
       ) : cart.length === 0 ? (
-        <p>Tu carrito está vacío. Agrega algunos perfumes!</p>
+        <p>Tu carrito está vacío. ¡Agrega algunos perfumes!</p>
       ) : (
         <>
           {cart.map((item) => (

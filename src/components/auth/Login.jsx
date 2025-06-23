@@ -5,14 +5,14 @@ import {
   successNotification,
   errorNotification,
 } from "../utils/notifications/Notifications";
-import { useAuth } from "../../hooks/useAuth"; // Importa el hook para usar el contexto
+import { useAuth } from "../../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth(); // Extraemos login del contexto
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +25,8 @@ const Login = () => {
       "POST",
       credentials,
       (data) => {
-        login(data.token); // Actualizamos el contexto y localStorage
+        console.log("DATA RECIBIDA:", data); // linea para eliminar
+        login(data.token);
         successNotification("¡Inicio de sesión exitoso!");
         navigate("/dashboard");
         setLoading(false);
