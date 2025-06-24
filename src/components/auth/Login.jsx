@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import { customFetch } from "../utils/fetch/customFetch";
 import { errorNotification, successNotification } from "../utils/notifications/Notifications";
 import useAuth from "../../hooks/useAuth";
@@ -9,7 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, hasRole } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +25,12 @@ const Login = () => {
         console.log("DATA RECIBIDA:", data); // linea para eliminar
         login(data.token);
         successNotification("¡Inicio de sesión exitoso!");
-        navigate("/dashboard");
+        if(hasRole(["admin","superadmin"])) {
+        navigate("/dashboard", { replace: true });
+        }
+        else {
+          navigate("/", { replace: true });
+        }
         setLoading(false);
       },
       (error) => {
