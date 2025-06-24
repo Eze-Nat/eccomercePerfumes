@@ -37,6 +37,7 @@ const DashboardAdmin = () => {
 
       {showOrders && <OrdersDashboard isAdmin={true} />}
       {showProducts && <ProductsDashboard isAdmin={true} />}
+      
     </div>
   );
 };

@@ -2,10 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import AdminControls from "../admin/AdminControls";
 import { useCart } from "../../contexts/cart/CartContextProvider";
-import {
-  successNotification,
-  errorNotification,
-} from "../utils/notifications/Notifications";
+import { successNotification, errorNotification } from "../utils/notifications/Notifications";
 import Loader from "../utils/spinner/Loader";
 
 import { mapBackendToFrontend, mapFrontendToBackend } from "../utils/mapperDB/mappers";
@@ -17,46 +14,24 @@ const PerfumeCard = ({ perfume = {}, onUpdateProduct, isAdmin = false }) => {
   
 const [currentPerfume, setCurrentPerfume] = useState(mapBackendToFrontend(perfume));
 
-    useEffect(() => {
-    setCurrentPerfume({
-      id: perfume.id || "",
-      name: perfume.titulo || "",
-      description: perfume.descripcion || "",
-      mainImage: perfume.imagen || "",
-      price: parseFloat(perfume.precio) || 0,
-      stock: parseInt(perfume.stock) || 0,
-      brand: perfume.brand || "",
-      category: perfume.category || "",
-      active: perfume.active ?? true,
-    });
+  useEffect(() => {
+    setCurrentPerfume(mapBackendToFrontend(perfume));
   }, [perfume]);
 
 
 const [showAdminControls, setShowAdminControls] = useState(false);
 if (!isAdmin && !perfume.active) return null;
 
-  const handleFieldChange = (field, value) => {
-    setCurrentPerfume((prev) => ({
-      ...prev,
-      [field]:
-        field === "price" || field === "stock" ? parseFloat(value) || 0 : value,
-    }));
-  };
+const handleFieldChange = (field, value) => {
+  setCurrentPerfume((prev) => ({
+    ...prev,
+    [field]: field === "price" || field === "stock" ? parseFloat(value) || 0 : value,
+  }));
+};
 
 const handleSaveChanges = async () => {
-  try {
-    // Ajustar claves para el backend
-const updatedData = {
-  id: currentPerfume.id,
-  name: currentPerfume.name,
-  description: currentPerfume.description,
-  mainImage: currentPerfume.mainImage,
-  price: currentPerfume.price,
-  stock: currentPerfume.stock,
-  brand: currentPerfume.brand,
-  category: currentPerfume.category,
-  active: currentPerfume.active,
-};
+    try {
+      const updatedData = mapFrontendToBackend(currentPerfume);
 
       console.log("Datos a actualizar:", updatedData);
 
@@ -86,26 +61,20 @@ const updatedData = {
       </div>
 
       <div className="perfume-image-container">
-        <Loader
-          src={
-            perfume.imagen?.startsWith("http")
-              ? perfume.imagen
-              : `http://localhost:3000${perfume.imagen}`
-          }
-          alt={perfume.titulo}
-          placeholder="/placeholder-image.png"
-        />
+  <Loader
+    src={perfume.imagen?.startsWith("http") ? perfume.imagen : `http://localhost:3000${perfume.imagen}`}
+    alt={perfume.titulo}
+    placeholder="/placeholder-image.png" 
+  />
       </div>
 
-      <div className="m-2">
-        ${perfume.precio?.toFixed(2) || "Consultar precio"}
-      </div>
+      <div className="m-2">${perfume.precio?.toFixed(2) || "Consultar precio"}</div>
 
-      <Button variant="outline-warning" className="btn-perfume m-2" onClick={() => addToCart(perfume)}>
+      <Button variant="outline-warning" className="btn-perfume m-2" onClick={() => !disabled && addToCart(perfume)} disabled={disabled}>
         Agregar al carrito
       </Button>
 
-      {hasRole("admin","superadmin") && (
+      {isAdmin && (
         <>
           <Button
             variant="outline-danger"
