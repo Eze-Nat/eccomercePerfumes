@@ -82,7 +82,7 @@ const Navbar = ({ onSearchPerfume }) => {
                 className={({ isActive }) =>
                   `text-white ${isActive ? 'active-link' : ''}`
                 }
-                title="Mi perfil"
+                title="Dashboard"
               >
                 <i className="bi bi-person fs-4"></i>
               </NavLink>

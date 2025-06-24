@@ -1,9 +1,10 @@
 import { useState } from "react";
-import useAuth from "../../../../hooks/useAuth"; // Asegurate de importar correctamente tu hook
+import { Button } from "react-bootstrap";
 import Users from "../../../admin/users/Users";
 import OrdersDashboard from "../orders/OrderDashboard";
-import { Button } from "react-bootstrap";
 import ProductsDashboard from "../Products/ProductDashboard";
+import UserProfile from "../../../users/UsersProfile";
+import useAuth from "../../../../hooks/useAuth"; // Asegurate de importar correctamente tu hook
 
 const DashboardAdmin = () => {
   const [showOrders, setShowOrders] = useState(false);
@@ -15,7 +16,7 @@ const DashboardAdmin = () => {
     <div className="container mt-5">
       <h1>Panel de Administración admin</h1>
       <p>Bienvenido{userData?.first_name ? `, ${userData.first_name}` : ""}</p>
-
+      <UserProfile />
       <div className="mb-3">
         <Button
           variant={showOrders ? "outline-secondary" : "primary"}
