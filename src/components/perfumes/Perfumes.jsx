@@ -1,5 +1,6 @@
 import { Container, Row, Col } from "react-bootstrap";
 import PerfumeCard from "./PerfumeCard.jsx";
+import useAuth from "../../hooks/useAuth.jsx";
 
 const NoPerfumesResults = () => (
   <div className="text-center my-5">
@@ -9,11 +10,19 @@ const NoPerfumesResults = () => (
 
 const ListOfPerfumes = ({ perfumes, searchPerfume, onUpdatePerfume }) => {
   
+  const { hasRole} = useAuth();
 
-  const perfumesFiltered = perfumes.filter(
-    (perfume) =>
-      perfume.titulo?.toUpperCase().includes(searchPerfume?.toUpperCase() || "") ||
-      perfume.brand?.toUpperCase().includes(searchPerfume?.toUpperCase() || "")
+
+  
+  console.log("¿Es admin o superadmin?", hasRole(["admin", "superadmin"]));
+
+  let perfumesFiltered = perfumes.filter((perfume) => 
+    perfume.titulo?.toUpperCase().includes(searchPerfume?.toUpperCase() || "") ||
+    perfume.brand?.toUpperCase().includes(searchPerfume?.toUpperCase() || "")
+  );
+
+    perfumesFiltered = perfumesFiltered.filter(perfume =>
+    hasRole(["admin", "superadmin"]) ? true : perfume.active
   );
 
   if (!perfumesFiltered.length) return <NoPerfumesResults />;
@@ -21,14 +30,15 @@ const ListOfPerfumes = ({ perfumes, searchPerfume, onUpdatePerfume }) => {
   return (
     <Container className="my-5">
       <Row className="g-4">
-        {perfumesFiltered.map((perfume) => {
-          
-          return (
-            <Col className="perfume" key={perfume.id}>
-              <PerfumeCard perfume={perfume} isAdmin={true} onUpdateProduct={onUpdatePerfume} />
-            </Col>
-          );
-        })}
+        {perfumesFiltered.map((perfume) => (
+          <Col className="perfume" key={perfume.id}>
+            <PerfumeCard
+              perfume={perfume}
+              isAdmin={hasRole(["admin", "superadmin"])}
+              onUpdateProduct={onUpdatePerfume}
+            />
+          </Col>
+        ))}
       </Row>
     </Container>
   );
