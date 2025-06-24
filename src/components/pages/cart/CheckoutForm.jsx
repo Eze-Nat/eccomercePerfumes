@@ -4,7 +4,7 @@ import {
   successNotification,
   errorNotification,
 } from "../../utils/notifications/Notifications";
-import { customFetch } from "../../utils/fetch/customFetch";
+import { customFetch } from "../../utils/fetch/customfetch";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -46,6 +46,7 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
     };
 
     try {
+      console.log("fetch desde checkout", orderData);
       const response = await customFetch("/order", "POST", orderData);
       successNotification("Orden creada exitosamente");
       onConfirm(response); // muestra el resumen desde CartPage

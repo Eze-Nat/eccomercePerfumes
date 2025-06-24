@@ -11,7 +11,7 @@ const UserOrderDetailModal = ({ show, onHide, order }) => {
       <Modal.Body>
         <p>
           <strong>Fecha de compra:</strong>{" "}
-          {new Date(order.createdAt).toLocaleDateString()}
+          {new Date(order.orderDate).toLocaleDateString()}
         </p>
         <p>
           <strong>Total:</strong> ${order.total}
@@ -28,12 +28,12 @@ const UserOrderDetailModal = ({ show, onHide, order }) => {
             <ListGroup.Item key={idx}>
               <div className="d-flex justify-content-between">
                 <div>
-                  <strong>{item.product.name}</strong>
+                  <strong>{item.Product.name}</strong>
                   <div className="text-muted">
-                    {item.quantity} x ${item.product.price}
+                    {item.quantity} x ${item.Product.price}
                   </div>
                 </div>
-                <div>${item.quantity * item.product.price}</div>
+                <div>${item.quantity * item.Product.price}</div>
               </div>
             </ListGroup.Item>
           ))}

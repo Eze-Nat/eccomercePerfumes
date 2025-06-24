@@ -17,7 +17,7 @@ const AdminOrderList = () => {
   const fetchAllOrders = () => {
     setLoading(true);
     customFetch(
-      "api/order",
+      "/order",
       "GET",
       null,
       (data) => {

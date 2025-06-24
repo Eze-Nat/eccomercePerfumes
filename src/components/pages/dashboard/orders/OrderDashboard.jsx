@@ -1,17 +1,20 @@
-import { useAuth } from "../../../../hooks/useAuth";
+import useAuth from "../../../../hooks/useAuth";
 import { Navigate } from "react-router-dom";
 import UserOrderList from "./UserOrderList";
 import AdminOrderList from "./AdminOrderList"; // <- este lo hacemos si no lo tenés
 
 const OrderDashboard = () => {
-  const { isAuth, role } = useAuth();
+  const { isAuth, hasRole } = useAuth();
 
   if (!isAuth) return <Navigate to="/login" />;
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-4">Órdenes de Compra</h2>
-      {role === "admin" ? <AdminOrderList /> : <UserOrderList />}
+      {hasRole(["superadmin", "admin"]) ? (
+        <AdminOrderList />
+      ) : (
+        <UserOrderList />
+      )}
     </div>
   );
 };

@@ -17,7 +17,7 @@ const UserOrderList = () => {
   const fetchUserOrders = () => {
     setLoading(true);
     customFetch(
-      "api/order/user",
+      "/order/user",
       "GET",
       null,
       (data) => {
@@ -35,6 +35,8 @@ const UserOrderList = () => {
   };
 
   const openModal = (order) => {
+    console.log("desde order", order);
+
     setSelectedOrder(order);
     setShowModal(true);
   };
