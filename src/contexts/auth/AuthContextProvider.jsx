@@ -5,19 +5,21 @@ import {
   getToken,
   isAuthenticated,
   saveToken,
+  removeToken,
   logout as logoutHelper,
-} from "../../helpers/auth.helpers.js";
+} from "../../helpers/auth.helpers";
 
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(getToken());
   const [isAuth, setIsAuth] = useState(isAuthenticated());
-  const [user, setUser] = useState(() => {
+  const [userData, setUserData] = useState(() => {
     const storedToken = getToken();
     if (storedToken) {
       try {
         return jwtDecode(storedToken);
       } catch (err) {
-        console.error("Error al decodificar el token inicial:", err.message);
+        console.error("Token inválido al iniciar:", err);
+        removeToken();
       }
     }
     return null;
@@ -29,9 +31,13 @@ const AuthProvider = ({ children }) => {
       saveToken(newToken);
       setToken(newToken);
       setIsAuth(true);
-      setUser(decoded);
+      setUserData(decoded);
     } catch (err) {
-      console.error("Login fallido, token inválido:", err.message);
+      console.error("Token inválido al hacer login:", err);
+      removeToken();
+      setToken(null);
+      setIsAuth(false);
+      setUserData(null);
     }
   };
 
@@ -39,7 +45,7 @@ const AuthProvider = ({ children }) => {
     logoutHelper(redirectUrl);
     setToken(null);
     setIsAuth(false);
-    setUser(null);
+    setUserData(null);
   };
 
   useEffect(() => {
@@ -47,10 +53,16 @@ const AuthProvider = ({ children }) => {
       const currentToken = getToken();
       setToken(currentToken);
       setIsAuth(isAuthenticated());
-      try {
-        setUser(currentToken ? jwtDecode(currentToken) : null);
-      } catch {
-        setUser(null);
+
+      if (currentToken) {
+        try {
+          setUserData(jwtDecode(currentToken));
+        } catch {
+          setUserData(null);
+          removeToken();
+        }
+      } else {
+        setUserData(null);
       }
     };
 
@@ -63,8 +75,8 @@ const AuthProvider = ({ children }) => {
       value={{
         token,
         isAuth,
-        userData: user,
-        role: user?.role || null,
+        userData,
+        role: userData?.role || null,
         login,
         logout,
       }}

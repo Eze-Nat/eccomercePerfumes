@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, Button, Spinner } from "react-bootstrap";
 import { customFetch } from "../../../utils/fetch/customFetch";
 import { errorNotification } from "../../../utils/notifications/Notifications";
-import AdminOrderDetailModal from "./AdminOrderDetailModal";
+import AdminOrderDetailModal from "./orders.modal/AdminOrderDetailModal";
 
 const AdminOrderList = () => {
   const [orders, setOrders] = useState([]);
