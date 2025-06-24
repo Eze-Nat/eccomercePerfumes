@@ -4,38 +4,23 @@ import AdminControls from "../admin/AdminControls";
 import { useCart } from "../../contexts/cart/CartContextProvider";
 import { successNotification, errorNotification } from "../utils/notifications/Notifications";
 import Loader from "../utils/spinner/Loader";
-import useAuth from "../../hooks/useAuth"
-const PerfumeCard = ({ perfume = {}, isAdmin = false, onUpdateProduct }) => {
-  
-  const { hasRole } = useAuth();
-  
-  const [currentPerfume, setCurrentPerfume] = useState({
-    id: perfume.id || "",
-    name: perfume.titulo || "",
-    description: perfume.descripcion || "",
-    mainImage: perfume.imagen || "",
-    price: parseFloat(perfume.precio) || 0,
-    stock: parseInt(perfume.stock) || 0,
-    brand: perfume.brand || "",
-    category: perfume.category || "",
-    active: perfume.active ?? true,
-  });
 
-    useEffect(() => {
-    setCurrentPerfume({
-      id: perfume.id || "",
-      name: perfume.titulo || "",
-      description: perfume.descripcion || "",
-      mainImage: perfume.imagen || "",
-      price: parseFloat(perfume.precio) || 0,
-      stock: parseInt(perfume.stock) || 0,
-      brand: perfume.brand || "",
-      category: perfume.category || "",
-      active: perfume.active ?? true,
-    });
+import { mapBackendToFrontend, mapFrontendToBackend } from "../utils/mapperDB/mappers";
+
+
+const PerfumeCard = ({ perfume = {}, onUpdateProduct, isAdmin = false }) => {
+  
+
+  
+const [currentPerfume, setCurrentPerfume] = useState(mapBackendToFrontend(perfume));
+
+  useEffect(() => {
+    setCurrentPerfume(mapBackendToFrontend(perfume));
   }, [perfume]);
 
-  const [showAdminControls, setShowAdminControls] = useState(false);
+
+const [showAdminControls, setShowAdminControls] = useState(false);
+if (!isAdmin && !perfume.active) return null;
 
 const handleFieldChange = (field, value) => {
   setCurrentPerfume((prev) => ({
@@ -45,34 +30,28 @@ const handleFieldChange = (field, value) => {
 };
 
 const handleSaveChanges = async () => {
-  try {
-    // Ajustar claves para el backend
-const updatedData = {
-  id: currentPerfume.id,
-  name: currentPerfume.name,
-  description: currentPerfume.description,
-  mainImage: currentPerfume.mainImage,
-  price: currentPerfume.price,
-  stock: currentPerfume.stock,
-  brand: currentPerfume.brand,
-  category: currentPerfume.category,
-  active: currentPerfume.active,
-};
+    try {
+      const updatedData = mapFrontendToBackend(currentPerfume);
 
-    console.log("Datos a actualizar:", updatedData);
+      console.log("Datos a actualizar:", updatedData);
 
-    await onUpdateProduct(updatedData);
-    setShowAdminControls(false);
-    successNotification("Producto actualizado con éxito");
-  } catch (error) {
-    errorNotification("Error al actualizar: " + error.message);
-  }
-};
+      await onUpdateProduct(updatedData);
+      setShowAdminControls(false);
+      successNotification("Producto actualizado con éxito");
+    } catch (error) {
+      errorNotification("Error al actualizar: " + error.message);
+    }
+  };
 
+  const disabled = !perfume.active && isAdmin;
   const { addToCart } = useCart();
 
+
   return (
-    <article className="perfume-card">
+        <article
+      className="perfume-card"
+      style={{ opacity: (!perfume.active & isAdmin) ? 0.5 : 1 }}
+    >
       <div className="text-center">
         <h3>{perfume.titulo}</h3>
         <span className="price">
@@ -91,11 +70,11 @@ const updatedData = {
 
       <div className="m-2">${perfume.precio?.toFixed(2) || "Consultar precio"}</div>
 
-      <Button variant="outline-warning" className="btn-perfume m-2" onClick={() => addToCart(perfume)}>
+      <Button variant="outline-warning" className="btn-perfume m-2" onClick={() => !disabled && addToCart(perfume)} disabled={disabled}>
         Agregar al carrito
       </Button>
 
-      {hasRole("admin","superadmin") && (
+      {isAdmin && (
         <>
           <Button
             variant="outline-danger"

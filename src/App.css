@@ -81,6 +81,13 @@ main {
   padding: 10px;
 }
 */
+
+.perfume-card img,
+.admin-product img {
+  border-radius: 8px;
+}
+
+
 .perfume-image-container {
   width: 300px;
   height: 300px;
