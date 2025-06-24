@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useCart } from "../../../contexts//cart/CartContextProvider"; // Importamos el carrito
+import useAuth from "../../../hooks/useAuth"; // Importamos el hook de autenticación
 import "./navbar.css";
 
 const Navbar = ({ onSearchPerfume }) => {
-  const { cart } = useCart(); // Extraemos el carrito
+  const { cart } = useCart();
   const [searchPerfume, setSearchPerfume] = useState("");
   const timeoutRef = useRef(null);
+  const { isAuth, logout } = useAuth()
+  const location = useLocation();
+
+  const showSearchBar = ['/', "/search"].includes(location.pathname);
 
   useEffect(() => {
     return () => {
@@ -26,7 +31,7 @@ const Navbar = ({ onSearchPerfume }) => {
 
     timeoutRef.current = setTimeout(() => {
       onSearchPerfume(newSearchPerfume);
-    }, 1500); // Reducimos el tiempo de debounce
+    }, 1500);
   };
 
   const handleOnSubmit = (event) => {
@@ -38,35 +43,75 @@ const Navbar = ({ onSearchPerfume }) => {
     onSearchPerfume(searchPerfume);
   };
 
+  const handleLogout = () => {
+    setSearchPerfume("");
+    logout();
+  };
+
   return (
     <nav className="navbar fixed-top navbar-dark bg-dark px-4">
       <div className="container-fluid">
-          <Link className="navbar-brand fw-bold" to="/" replace>
-            Perfumería El Turco
-          </Link>
-        <div className="flex-grow-1 d-flex justify-content-center">
-          <form className="d-flex" role="search" onSubmit={handleOnSubmit}>
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Buscar perfume"
-              aria-label="Buscar"
-              onChange={handleOnChange}
-              value={searchPerfume}
-            />
-            <button className="btn btn-outline-light" type="submit">
-              Buscar
-            </button>
-          </form>
-        </div>
+        <Link className="navbar-brand fw-bold" to="/" replace>
+          Perfumería El Turco
+        </Link>
+
+
+        {showSearchBar && (
+          <div className="flex-grow-1 d-flex justify-content-center">
+            <form className="d-flex" role="search" onSubmit={handleOnSubmit}>
+              <input
+                className="form-control me-2"
+                type="search"
+                placeholder="Buscar perfume"
+                aria-label="Buscar"
+                onChange={handleOnChange}
+                value={searchPerfume}
+              />
+              <button className="btn btn-outline-light" type="submit">
+                Buscar
+              </button>
+            </form>
+          </div>
+        )}
 
         <div className="d-flex align-items-center gap-3">
-          <a href="/login" className="text-white" title="Iniciar sesión">
-            <i className="bi bi-person fs-4"></i>
-          </a>
-          <a
-            href="/cart"
-            className="text-white position-relative"
+          {isAuth ? (
+            <>
+              <NavLink
+                to="/dashboard" replace
+                className={({ isActive }) =>
+                  `text-white ${isActive ? 'active-link' : ''}`
+                }
+                title="Mi perfil"
+              >
+                <i className="bi bi-person fs-4"></i>
+              </NavLink>
+
+              <button
+                onClick={handleLogout}
+                className="btn btn-link text-white"
+                title="Cerrar sesión"
+              >
+                <i className="bi bi-box-arrow-right fs-4"></i>
+              </button>
+            </>
+          ) : (
+            <NavLink
+              to="/login" replace
+              className={({ isActive }) =>
+                `text-white ${isActive ? 'active-link' : ''}`
+              }
+              title="Iniciar sesión"
+            >
+              <i className="bi bi-person fs-4"></i>
+            </NavLink>
+          )}
+
+          <NavLink
+            to="/cart"
+            className={({ isActive }) =>
+              `text-white position-relative ${isActive ? 'active-link' : ''}`
+            }
             title="Carrito"
           >
             <i className="bi bi-cart2 fs-4"></i>
@@ -75,7 +120,7 @@ const Navbar = ({ onSearchPerfume }) => {
                 {cart.length}
               </span>
             )}
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
