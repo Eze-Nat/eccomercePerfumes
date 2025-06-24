@@ -3,10 +3,12 @@ import useAuth from "../../../../hooks/useAuth";
 import Users from "../../../admin/users/Users";
 import OrdersDashboard from "../orders/OrderDashboard";
 import { Button } from "react-bootstrap";
+import ProductsDashboard from "../Products/ProductDashboard";
 
 const DashboardSuperAdmin = () => {
   const [showUsers, setShowUsers] = useState(false);
   const [showOrders, setShowOrders] = useState(false);
+  const [showProducts, setShowProducts] = useState(false);
 
   const { userData } = useAuth();
 
@@ -27,11 +29,21 @@ const DashboardSuperAdmin = () => {
         <Button
           variant={showOrders ? "outline-secondary" : "primary"}
           onClick={() => setShowOrders(!showOrders)}
+          className="me-2"
         >
           {showOrders ? "Ocultar Compras" : "Compras"}
         </Button>
-      </div>
 
+      <Button
+          variant={showProducts ? "outline-secondary" : "primary"}
+          onClick={() => setShowProducts(!showProducts)}
+          className="me-2"
+        >
+          {showOrders ? "Ocultar Productos" : "Productos"}
+        </Button>
+      </div>
+      
+      {showProducts && <ProductsDashboard isAdmin={true} />}
       {showUsers && <Users />}
       {showOrders && <OrdersDashboard isAdmin={true} />}
     </div>

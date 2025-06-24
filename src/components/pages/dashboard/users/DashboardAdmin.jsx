@@ -6,7 +6,6 @@ import { Button } from "react-bootstrap";
 import ProductsDashboard from "../Products/ProductDashboard";
 
 const DashboardAdmin = () => {
-  const [showUsers, setShowUsers] = useState(false);
   const [showOrders, setShowOrders] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
 
@@ -34,11 +33,16 @@ const DashboardAdmin = () => {
           {showOrders ? "Ocultar Productos" : "Productos"}
         </Button>
       </div>
-
-      {showOrders && <OrdersDashboard isAdmin={true} />}
-      {showProducts && <ProductsDashboard isAdmin={true} />}
       
-    </div>
+      {showProducts && <ProductsDashboard isAdmin={true} />}
+      {showOrders && <OrdersDashboard isAdmin={true} />}
+      
+
+
+      </div>
+
+      
+
   );
 };
 
