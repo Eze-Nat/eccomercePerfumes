@@ -2,17 +2,27 @@
   width: 100%;
   background-color: var(--color-bg);
   color: var(--color-text);
-  position: fixed; /* Cambiado de absolute a fixed */
+  position: fixed;
+  /* Cambiado de absolute a fixed */
   top: 0;
   left: 0;
-  z-index: 1000; /* Asegura que esté por encima del contenido */
-  height: 60px; /* Altura fija para consistencia */
+  z-index: 1000;
+  /* Asegura que esté por encima del contenido */
+  height: 60px;
+  /* Altura fija para consistencia */
 }
-  .navbar-wrapper {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+
+.navbar-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.active-link {
+  color: #0d6efd !important;
+  /* Color azul de Bootstrap para active */
+  text-decoration: underline;
+}
