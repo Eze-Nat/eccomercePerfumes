@@ -74,22 +74,21 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
         <strong>Total:</strong> ${total.toFixed(2)}
       </p>
 
-      <Form.Group className="mb-3">
-        <Form.Label>
-          <strong>Método de Pago</strong>
-        </Form.Label>
-        <Form.Select
-          value={paymentMethod}
-          onChange={(e) => setPaymentMethod(e.target.value)}
-          disabled={isSubmitting}
-        >
-          <option value="Efectivo">Efectivo</option>
-          <option value="Tarjeta">Tarjeta</option>
-        </Form.Select>
-      </Form.Group>
+     <Form.Group className="mb-3" controlId="paymentMethod">
+  <Form.Label className="fw-bold">Método de Pago</Form.Label>
+  <Form.Select
+    value={paymentMethod}
+    onChange={(e) => setPaymentMethod(e.target.value)}
+    disabled={isSubmitting}
+    className="w-auto" // Esto hace que el select ocupe solo el espacio necesario
+  >
+    <option value="Efectivo">Efectivo</option>
+    <option value="Tarjeta">Tarjeta</option>
+  </Form.Select>
+</Form.Group>
 
       <div className="checkout-actions">
-        <Button variant="secondary" onClick={onCancel} disabled={isSubmitting}>
+        <Button variant="secondary" onClick={onCancel} disabled={isSubmitting} className="m-3">
           Cancelar
         </Button>
         <Button

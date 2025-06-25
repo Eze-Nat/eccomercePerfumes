@@ -74,24 +74,7 @@ const handleSaveChanges = async () => {
         Agregar al carrito
       </Button>
 
-      {isAdmin && (
-        <>
-          <Button
-            variant="outline-danger"
-            className="btn-perfume m-2"
-            onClick={() => setShowAdminControls(!showAdminControls)}
-          >
-            {showAdminControls ? "Ocultar controles" : "Modificar producto"}
-          </Button>
-          {showAdminControls && (
-            <AdminControls
-              perfume={currentPerfume}
-              onFieldChange={handleFieldChange}
-              onSave={handleSaveChanges}
-            />
-          )}
-        </>
-      )}
+
     </article>
   );
 };

@@ -1,23 +1,18 @@
 import { useState } from "react";
 import { useCart } from "../../../contexts/cart/CartContextProvider";
-import { Button } from "react-bootstrap";
+import { Button, Row, Col, Badge, Card } from "react-bootstrap";
 import {
   successNotification,
   errorNotification,
 } from "../../utils/notifications/Notifications";
-// import customFetch from "../../utils/fetch/customfetch";
 import CheckoutForm from "./CheckoutForm";
 
 const CartPage = () => {
-  const { cart, addToCart, removeFromCart, clearCart, decreaseQuantity } =
-    useCart();
+  const { cart, addToCart, removeFromCart, clearCart, decreaseQuantity } = useCart();
   const [showForm, setShowForm] = useState(false);
   const [orderSuccessful, setOrderSuccessful] = useState(false);
 
-  const total = cart.reduce(
-    (acc, item) => acc + item.precio * item.cantidad,
-    0
-  );
+  const total = cart.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
 
   const increaseQuantity = (product) => addToCart(product);
 
@@ -44,8 +39,8 @@ const CartPage = () => {
   }
 
   return (
-    <div className="cart-page">
-      <h2>Resumen del Carrito</h2>
+    <div className="container py-4">
+      <h2 className="mb-4">Resumen del Carrito</h2>
 
       {showForm ? (
         <CheckoutForm
@@ -55,71 +50,84 @@ const CartPage = () => {
           onCancel={() => setShowForm(false)}
         />
       ) : cart.length === 0 ? (
-        <p>Tu carrito está vacío. ¡Agrega algunos perfumes!</p>
+        <p className="text-center py-5">Tu carrito está vacío. ¡Agrega algunos perfumes!</p>
       ) : (
         <>
-          {cart.map((item) => (
-            <div key={item.id} className="cart-item">
-              <img src={item.imagen} alt={item.nombre} className="cart-image" />
-              <div className="cart-details">
-                <h4>{item.nombre}</h4>
-                <p>{item.descripcion}</p>
-                <p>
-                  <strong>${item.precio.toFixed(2)}</strong>
-                </p>
+          <div className="mb-4">
+            {cart.map((item) => (
+              <Row key={item.id} className="align-items-center mb-3 p-3 border rounded">
+                <Col xs={3} md={2}>
+                  <img
+                    src={item.imagen}
+                    alt={item.nombre}
+                    className="img-fluid rounded"
+                    style={{ maxHeight: "80px" }}
+                  />
+                </Col>
+                <Col xs={9} md={4}>
+                  <h5 className="mb-1">{item.nombre}</h5>
+                  <p className="mb-1 text-white">{item.descripcion}</p>
+                  <p className="mb-0">${item.precio.toFixed(2)}</p>
+                </Col>
+                <Col xs={12} md={3} className="mt-2 mt-md-0">
+                  <div className="d-flex align-items-center">
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={() => decreaseQuantity(item.id)}
+                      className="me-2"
+                    >
+                      -
+                    </Button>
+                    <Badge bg="light" text="dark" className="mx-2">
+                      {item.cantidad}
+                    </Badge>
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => increaseQuantity(item)}
+                      className="me-2"
+                    >
+                      +
+                    </Button>
+                  </div>
+                </Col>
+                <Col xs={12} md={3} className="mt-2 mt-md-0 text-md-end">
+                  <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={() => removeFromCart(item.id)}
+                  >
+                    Eliminar
+                  </Button>
+                </Col>
+              </Row>
+            ))}
+          </div>
 
-                <div className="quantity-controls">
+          <Row className="mt-4">
+            <Col md={{ span: 6, offset: 6 }}>
+              <div className="p-3 rounded">
+                <h4 className="text-end">
+                  Total: <strong>${total.toFixed(2)}</strong>
+                </h4>
+                <div className="d-flex justify-content-end gap-2 mt-3">
                   <Button
                     variant="outline-secondary"
-                    size="sm"
-                    onClick={() => decreaseQuantity(item.id)}
+                    onClick={handleClearCart}
                   >
-                    -
+                    Vaciar carrito
                   </Button>
-                  <span className="quantity">{item.cantidad}</span>
                   <Button
-                    variant="outline-primary"
-                    size="sm"
-                    onClick={() => increaseQuantity(item)}
+                    variant="success"
+                    onClick={() => setShowForm(true)}
                   >
-                    +
+                    Proceder al pago
                   </Button>
                 </div>
-
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => removeFromCart(item.id)}
-                >
-                  Eliminar
-                </Button>
               </div>
-            </div>
-          ))}
-
-          <div className="cart-summary">
-            <h4 className="total">
-              Total: <strong>${total.toFixed(2)}</strong>
-            </h4>
-          </div>
-
-          <div className="cart-actions">
-            <Button
-              variant="outline-secondary"
-              className="clear-cart-btn"
-              onClick={handleClearCart}
-            >
-              Vaciar carrito
-            </Button>
-
-            <Button
-              variant="success"
-              className="checkout-btn"
-              onClick={() => setShowForm(true)}
-            >
-              Proceder al pago
-            </Button>
-          </div>
+            </Col>
+          </Row>
         </>
       )}
     </div>

@@ -17,8 +17,8 @@ const ProductListItem = ({ perfume, onEdit, onDelete }) => {
 
       <Col xs={6}>
         <strong>{perfume.titulo}</strong>
-        <div className="text-muted">{perfume.brand}</div>
-        <div className="text-muted">${perfume.precio}</div>
+        <div className="text-white">{perfume.brand}</div>
+        <div className="text-white">${perfume.precio}</div>
       </Col>
 
       <Col xs={2}>
