@@ -10,6 +10,8 @@ const ProductsDashboard = () => {
   const [products, setProducts] = useState([]);
   const [editProduct, setEditProduct] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
   const { hasRole } = useAuth();
 
@@ -20,7 +22,10 @@ const ProductsDashboard = () => {
   const fetchProducts = async () => {
     try {
       const data = await customFetch("/products", "GET", null, undefined, undefined, true);
-      setProducts(data.map(mapBackendToFrontend));
+      const sortedProducts = data
+        .map(mapBackendToFrontend)
+        .sort((a, b) => b.id - a.id);
+      setProducts(sortedProducts);
     } catch (error) {
       console.error("Error al cargar productos:", error);
     }
@@ -31,15 +36,20 @@ const ProductsDashboard = () => {
     setShowForm(true);
   };
 
-  const handleDelete = async (id) => {
+  const confirmDelete = (product) => {
+    setProductToDelete(product);
+    setShowDeleteModal(true);
+  };
+
+  const handleDelete = async () => {
     try {
-      await customFetch(`/products/${id}`, "DELETE");
+      await customFetch(`/products/${productToDelete.id}`, "DELETE");
       fetchProducts();
+      setShowDeleteModal(false);
     } catch (error) {
       console.error("Error al eliminar producto:", error);
     }
   };
-
 
   const handleFormSuccess = () => {
     fetchProducts();
@@ -55,17 +65,16 @@ const ProductsDashboard = () => {
         </Button>
       </div>
 
-{products
+      {products.map((perfume) => (
+        <ProductListItem
+          key={perfume.id}
+          perfume={perfume}
+          onEdit={handleEdit}
+          onDelete={() => confirmDelete(perfume)} // Cambiado para usar el modal
+        />
+      ))}
 
-  .map((perfume) => (
-    <ProductListItem
-      key={perfume.id}
-      perfume={perfume}
-      onEdit={handleEdit}
-      onDelete={handleDelete}
-    />
-))}
-
+      {/* Modal para formulario de producto */}
       <Modal show={showForm} onHide={() => setShowForm(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{editProduct ? "Editar Producto" : "Nuevo Producto"}</Modal.Title>
@@ -77,9 +86,27 @@ const ProductsDashboard = () => {
           />
         </Modal.Body>
       </Modal>
+
+      {/* Modal de confirmación para eliminar */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar eliminación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          ¿Estás seguro que deseas eliminar el producto <strong>{productToDelete?.nombre}</strong>?
+          <p className="text-danger mt-2">Esta acción no se puede deshacer.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleDelete}>
+            Eliminar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
-
 
 export default ProductsDashboard;

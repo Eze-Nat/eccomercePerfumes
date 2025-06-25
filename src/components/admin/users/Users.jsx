@@ -144,6 +144,27 @@ const Users = () => {
     setShowDeleteModal(true);
   };
 
+    const handleDeactivate = () => {
+    if (userToDelete) {
+      customFetch(
+        `/users/${userToDelete.id}`,
+        "PUT",
+        { ...userToDelete, active: false },
+        () => {
+          successNotification('Usuario desactivado correctamente');
+          setShowDeleteModal(false);
+          fetchUsers();
+        },
+        (error) => {
+          const mensaje =
+            error?.message || error?.error || "Error al desactivar el usuario.";
+          errorNotification(mensaje);
+          console.error("Error al desactivar el usuario", error);
+        }
+      );
+    }
+  };
+
   const handleDelete = () => {
     if (userToDelete) {
       customFetch(
@@ -221,14 +242,17 @@ const Users = () => {
 
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmar Eliminación</Modal.Title>
+          <Modal.Title>Acciones de Usuario</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          ¿Estás seguro de que deseas eliminar al usuario {userToDelete?.first_name} {userToDelete?.last_name}?
+          Al eliminar el usuario {userToDelete?.first_name} {userToDelete?.last_name}, se eliminarán todos sus pedidos y datos asociados. Podes desactivarlo si no queres eliminarlo permanentemente.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
             Cancelar
+          </Button>
+          <Button variant="warning" onClick={handleDeactivate}>
+            Desactivar
           </Button>
           <Button variant="danger" onClick={handleDelete}>
             Eliminar
