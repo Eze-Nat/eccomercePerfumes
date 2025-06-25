@@ -17,14 +17,20 @@ const ProductsDashboard = () => {
     fetchProducts();
   }, []);
 
-  const fetchProducts = async () => {
-    try {
-      const data = await customFetch("/products", "GET", null, undefined, undefined, true);
-      setProducts(data.map(mapBackendToFrontend));
-    } catch (error) {
-      console.error("Error al cargar productos:", error);
-    }
-  };
+const fetchProducts = async () => {
+  try {
+    const data = await customFetch("/products", "GET", null, undefined, undefined, true);
+    // Ordena por ID descendente (los más nuevos primero)
+    const sortedProducts = data
+      .map(mapBackendToFrontend)
+      .sort((a, b) => b.id - a.id);
+    
+    setProducts(sortedProducts);
+  } catch (error) {
+    console.error("Error al cargar productos:", error);
+  }
+};
+
 
   const handleEdit = (product) => {
     setEditProduct(product);
