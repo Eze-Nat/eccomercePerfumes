@@ -59,7 +59,6 @@ const UserForm = ({
     const timer = setTimeout(() => {
       if (formRef.current) {
         formRef.current.scrollIntoView({ behavior: 'smooth' });
-        //targetRef.current?.scrollIntoView({ behavior: 'smooth' })
       }
     }, 500);
     return () => clearTimeout(timer);
@@ -108,7 +107,6 @@ const UserForm = ({
 
   const togglePasswordFields = () => {
     setShowPasswordFields(!showPasswordFields);
-    // Limpiar errores de contraseña al ocultar los campos
     if (showPasswordFields) {
       const newErrors = { ...errors };
       delete newErrors.password;
@@ -139,7 +137,6 @@ const UserForm = ({
       ? { ...formData, role_id: '3' }
       : formData;
 
-    // Si no se muestran los campos de contraseña, no enviar esos valores
     if (!showPasswordFields) {
       delete finalFormData.password;
       delete finalFormData.confirmPassword;
