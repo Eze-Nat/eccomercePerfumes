@@ -71,9 +71,11 @@ const AdminOrderList = () => {
   // Eliminar orden
   const handleDeleteOrder = async () => {
     if (!orderToDelete) return;
+    console.log("orden desde fetch", orderToDelete);
+
     setDeleting(true);
     try {
-      await customFetch(`/order/${orderToDelete.id}`, "DELETE");
+      await customFetch(`/order/${orderToDelete.id}`, "DELETE", null);
       successNotification(`Orden #${orderToDelete.id} eliminada.`);
       // Actualizar lista
       setOrders((prev) => prev.filter((o) => o.id !== orderToDelete.id));
