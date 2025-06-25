@@ -23,6 +23,8 @@ const UserForm = ({
 }) => {
   const [validated, setValidated] = useState(false);
   const [roles, setRoles] = useState(initialRoles);
+  const [errors, setErrors] = useState({});
+  const [showPasswordFields, setShowPasswordFields] = useState(!editingUser);
   const { hasRole } = useAuth();
   
   const isAdmin = hasRole(['superadmin', 'admin']);
@@ -51,7 +53,9 @@ const UserForm = ({
       active: userData.active !== undefined ? userData.active : true,
       address: userData.address || ''
     });
-  }, [userData]);
+    // Ocultar campos de contraseña por defecto al editar
+    setShowPasswordFields(!editingUser);
+  }, [userData, editingUser]);
 
   useEffect(() => {
     if (editingUser && hasRole("admin")) {
@@ -59,32 +63,78 @@ const UserForm = ({
     }
   }, [editingUser]);
 
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.first_name.trim())
+      newErrors.first_name = "El nombre es obligatorio.";
+    if (!formData.last_name.trim())
+      newErrors.last_name = "El apellido es obligatorio.";
+    if (!formData.email.trim()) newErrors.email = "El correo es obligatorio.";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Correo no válido.";
+    if (!formData.address.trim())
+      newErrors.address = "La dirección es obligatoria.";
+    if (showPasswordFields && formData.password.length < 6)
+      newErrors.password = "La contraseña debe tener al menos 6 caracteres.";
+    if (showPasswordFields && formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Las contraseñas no coinciden.";
+    if (isAdmin && !formData.role_id)
+      newErrors.role_id = "El rol es obligatorio.";
+    return newErrors;
+  };
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    
+    if (errors[name]) {
+      const newErrors = {...errors};
+      delete newErrors[name];
+      setErrors(newErrors);
+    }
+  };
+
+  const togglePasswordFields = () => {
+    setShowPasswordFields(!showPasswordFields);
+    // Limpiar errores de contraseña al ocultar los campos
+    if (showPasswordFields) {
+      const newErrors = {...errors};
+      delete newErrors.password;
+      delete newErrors.confirmPassword;
+      setErrors(newErrors);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      e.stopPropagation();
+      setValidated(true);
+      return;
+    }
+
     if (form.checkValidity() === false) {
       e.stopPropagation();
       setValidated(true);
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      onError('Las contraseñas no coinciden');
-      return;
-    }
-
     const finalFormData = !isAdmin 
       ? { ...formData, role_id: '3' } 
       : formData;
+
+    // Si no se muestran los campos de contraseña, no enviar esos valores
+    if (!showPasswordFields) {
+      delete finalFormData.password;
+      delete finalFormData.confirmPassword;
+    }
 
     try {
       const successMessage = editingUser 
@@ -96,11 +146,6 @@ const UserForm = ({
     }
   };
 
-  const passwordRequired = !editingUser;
-  const passwordFeedback = editingUser 
-    ? 'Ingresa una contraseña para actualizarla' 
-    : 'Por favor ingresa una contraseña';
-
   return (
     <div className="bg-dark p-4 rounded-3">
       <Card className="mb-4 border-0 bg-dark text-light">
@@ -110,7 +155,7 @@ const UserForm = ({
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3" controlId="first_name">
-                  <Form.Label>Nombre</Form.Label>
+                  <Form.Label>Nombre*</Form.Label>
                   <Form.Control
                     type="text"
                     name="first_name"
@@ -118,15 +163,16 @@ const UserForm = ({
                     onChange={handleInputChange}
                     required
                     className="bg-secondary text-light border-dark"
+                    isInvalid={!!errors.first_name}
                   />
                   <Form.Control.Feedback type="invalid">
-                    Por favor ingresa un Nombre
+                    {errors.first_name || 'Por favor ingresa un Nombre'}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3" controlId="last_name">
-                  <Form.Label>Apellido</Form.Label>
+                  <Form.Label>Apellido*</Form.Label>
                   <Form.Control
                     type="text"
                     name="last_name"
@@ -134,9 +180,10 @@ const UserForm = ({
                     onChange={handleInputChange}
                     required
                     className="bg-secondary text-light border-dark"
+                    isInvalid={!!errors.last_name}
                   />
                   <Form.Control.Feedback type="invalid">
-                    Por favor ingresa un Apellido
+                    {errors.last_name || 'Por favor ingresa un Apellido'}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
@@ -146,7 +193,7 @@ const UserForm = ({
               {!editingHimself && (
                 <Col md={6}>
                   <Form.Group className="mb-3" controlId="email">
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>Email*</Form.Label>
                     <Form.Control
                       type="email"
                       name="email"
@@ -154,9 +201,10 @@ const UserForm = ({
                       onChange={handleInputChange}
                       required
                       className="bg-secondary text-light border-dark"
+                      isInvalid={!!errors.email}
                     />
                     <Form.Control.Feedback type="invalid">
-                      Por favor ingresa un email válido
+                      {errors.email || 'Por favor ingresa un email válido'}
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
@@ -169,12 +217,8 @@ const UserForm = ({
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    required
                     className="bg-secondary text-light border-dark"
                   />
-                  <Form.Control.Feedback type="invalid">
-                    Por favor ingresa un número de Celular
-                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>
@@ -182,7 +226,7 @@ const UserForm = ({
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3" controlId="address">
-                  <Form.Label>Dirección</Form.Label>
+                  <Form.Label>Dirección*</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={3}
@@ -190,10 +234,14 @@ const UserForm = ({
                     value={formData.address}
                     onChange={handleInputChange}
                     className="bg-secondary text-light border-dark"
+                    isInvalid={!!errors.address}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.address}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              { !editingHimself && (
+              {!editingHimself && (
               <Col md={6}>
                 <Form.Group className="mb-3" controlId="active">
                   <Form.Label>Estado</Form.Label>
@@ -209,20 +257,21 @@ const UserForm = ({
                   </div>
                 </Form.Group>
               </Col>
-              )};
+              )}
             </Row>
 
             {(!editingHimself && isAdmin) && (
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3" controlId="role_id">
-                    <Form.Label>Rol</Form.Label>
+                    <Form.Label>Rol*</Form.Label>
                     <Form.Select
                       name="role_id"
                       value={formData.role_id}
                       onChange={handleInputChange}
                       required
                       className="bg-secondary text-light border-dark"
+                      isInvalid={!!errors.role_id}
                     >
                       <option value="">Seleccione un rol</option>
                       {roles.map(role => (
@@ -232,47 +281,70 @@ const UserForm = ({
                       ))}
                     </Form.Select>
                     <Form.Control.Feedback type="invalid">
-                      Por favor selecciona un rol
+                      {errors.role_id || 'Por favor selecciona un rol'}
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
               </Row>          
             )}
 
-            <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3" controlId="password">
-                  <Form.Label>Contraseña</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required={passwordRequired}
-                    className="bg-secondary text-light border-dark"
+            {editingUser && (
+              <Row className="mb-3">
+                <Col md={12}>
+                  <Form.Check 
+                    type="switch"
+                    id="change-password-switch"
+                    label="Cambiar contraseña"
+                    checked={showPasswordFields}
+                    onChange={togglePasswordFields}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {passwordFeedback}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3" controlId="confirmPassword">
-                  <Form.Label>Confirmar Contraseña</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    required={passwordRequired}
-                    className="bg-secondary text-light border-dark"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Por favor confirma tu contraseña
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
+            )}
+
+            {showPasswordFields && (
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3" controlId="password">
+                    <Form.Label>Contraseña</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required={!editingUser}
+                      className="bg-secondary text-light border-dark"
+                      isInvalid={!!errors.password}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.password || 'La contraseña debe tener al menos 6 caracteres'}
+                    </Form.Control.Feedback>
+                    {editingUser && (
+                      <Form.Text className="text-muted">
+                        Deja en blanco para mantener la contraseña actual
+                      </Form.Text>
+                    )}
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3" controlId="confirmPassword">
+                    <Form.Label>Confirmar Contraseña</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      required={!editingUser}
+                      className="bg-secondary text-light border-dark"
+                      isInvalid={!!errors.confirmPassword}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.confirmPassword || 'Las contraseñas no coinciden'}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+              </Row>
+            )}
 
             <div className="d-flex justify-content-end gap-2">
               <Button variant="outline-light" onClick={onCancel}>
