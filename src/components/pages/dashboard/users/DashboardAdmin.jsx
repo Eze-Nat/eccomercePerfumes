@@ -31,7 +31,7 @@ const DashboardAdmin = () => {
           onClick={() => setShowProducts(!showProducts)}
           className="me-2"
         >
-          {showOrders ? "Ocultar Productos" : "Productos"}
+          {showProducts ? "Ocultar Productos" : "Productos"}
         </Button>
       </div>
 
