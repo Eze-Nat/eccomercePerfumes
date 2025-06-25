@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, InputGroup, FormControl, Badge, Alert, Button } from 'react-bootstrap';
 
 const UserList = ({ users = [], roles = [], onModal, onEdit }) => {
   const [filteredUsers, setFilteredUsers] = useState(users);
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    handleUsersFilter(searchTerm);
+  }, [users]);
 
   const handleUsersFilter = (newSearchTerm) => {
     const filtered = users.filter(user => 
