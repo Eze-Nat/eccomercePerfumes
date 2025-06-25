@@ -1,7 +1,6 @@
 import { useContext } from "react";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import AuthContext from "../contexts/auth/Auth.Context";
-
 
 const useAuth = () => {
   const context = useContext(AuthContext);
@@ -9,13 +8,14 @@ const useAuth = () => {
   const { token, isAuth, userData, login, logout } = context;
 
   const hasRole = (roles) => {
-    if (!userData?.role) return false;
-    
+    const roleName = userData?.role || userData?.Role?.name; // Intenta ambas
+    if (!roleName) return false;
+
     if (Array.isArray(roles)) {
-      return roles.includes(userData.role);
+      return roles.includes(roleName);
     }
-    
-    return userData.role === roles;
+
+    return roleName === roles;
   };
 
   const isTokenExpired = () => {
@@ -23,11 +23,11 @@ const useAuth = () => {
 
     try {
       const decoded = jwtDecode(token);
-      const currentTime = Date.now() / 1000; 
-      return decoded.exp < currentTime; 
+      const currentTime = Date.now() / 1000;
+      return decoded.exp < currentTime;
     } catch (err) {
       console.error("Error al decodificar el token:", err);
-      return true; 
+      return true;
     }
   };
 

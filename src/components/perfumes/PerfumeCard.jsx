@@ -1,81 +1,77 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import AdminControls from "../admin/AdminControls";
 import { useCart } from "../../contexts/cart/CartContextProvider";
+import { successNotification, errorNotification } from "../utils/notifications/Notifications";
+import Loader from "../utils/spinner/Loader";
 
-const PerfumeCard = ({ perfume = {}, isAdmin = false, onUpdateProduct }) => {
-  // Estados para el producto
-  const [currentPerfume, setCurrentPerfume] = useState({
-    id: perfume.id || "",
-    nombre: perfume.nombre || "",
-    titulo: perfume.titulo || "",
-    descripcion: perfume.descripcion || "",
-    imagen: perfume.imagen || "",
-    precio: parseFloat(perfume.precio) || 0,
-    stock: parseInt(perfume.stock) || 0,
-    isHidden: Boolean(perfume.isHidden),
-  });
+import { mapBackendToFrontend, mapFrontendToBackend } from "../utils/mapperDB/mappers";
 
-  // Estado para mostrar/ocultar controles
-  const [showAdminControls, setShowAdminControls] = useState(false);
 
+const PerfumeCard = ({ perfume = {}, onUpdateProduct, isAdmin = false }) => {
+  
+
+  
+const [currentPerfume, setCurrentPerfume] = useState(mapBackendToFrontend(perfume));
+
+  useEffect(() => {
+    setCurrentPerfume(mapBackendToFrontend(perfume));
+  }, [perfume]);
+
+
+const [showAdminControls, setShowAdminControls] = useState(false);
+if (!isAdmin && !perfume.active) return null;
+
+const handleFieldChange = (field, value) => {
+  setCurrentPerfume((prev) => ({
+    ...prev,
+    [field]: field === "price" || field === "stock" ? parseFloat(value) || 0 : value,
+  }));
+};
+
+const handleSaveChanges = async () => {
+    try {
+      const updatedData = mapFrontendToBackend(currentPerfume);
+
+      console.log("Datos a actualizar:", updatedData);
+
+      await onUpdateProduct(updatedData);
+      setShowAdminControls(false);
+      successNotification("Producto actualizado con éxito");
+    } catch (error) {
+      errorNotification("Error al actualizar: " + error.message);
+    }
+  };
+
+  const disabled = !perfume.active && isAdmin;
   const { addToCart } = useCart();
 
-  const handleFieldChange = (field, value) => {
-    setCurrentPerfume((prev) => ({
-      ...prev,
-      [field]:
-        field === "precio"
-          ? parseFloat(value) || 0
-          : field === "stock"
-          ? parseInt(value) || 0
-          : value,
-    }));
-  };
-
-  // Handler para guardar cambios
-  const handleSaveChanges = () => {
-    // Actualiza el JSON a través de la función prop
-    if (onUpdateProduct) {
-      onUpdateProduct(currentPerfume);
-    }
-    setShowAdminControls(false);
-  };
 
   return (
-    <article
+        <article
       className="perfume-card"
-      style={{
-        background: "transparent",
-        opacity: currentPerfume.isHidden ? 0.5 : 1,
-        border: currentPerfume.isHidden ? "1px dashed #ccc" : "none",
-        transition: "all 0.3s ease",
-      }}
+      style={{ opacity: (!perfume.active & isAdmin) ? 0.5 : 1 }}
     >
-      <div className="perfume-header">
-        <h3>{currentPerfume.nombre}</h3>
+      <div className="text-center">
+        <h3>{perfume.titulo}</h3>
         <span className="price">
-          <h6>{currentPerfume.titulo}</h6>
-          <p>{currentPerfume.descripcion}</p>
+          <h6>{perfume.brand}</h6>
+          <p>{perfume.descripcion}</p>
         </span>
       </div>
 
-      <div className="perfume-image-container d-flex justify-content-center align-items-center">
-        <img src={currentPerfume.imagen} alt={currentPerfume.nombre} />
+      <div className="perfume-image-container">
+  <Loader
+    src={perfume.imagen?.startsWith("http") ? perfume.imagen : `http://localhost:3000${perfume.imagen}`}
+    alt={perfume.titulo}
+    placeholder="/placeholder-image.png" 
+  />
       </div>
 
-      <div className="m-2">
-        {!currentPerfume.precio || isNaN(Number(currentPerfume.precio))
-          ? "Consultar Precio"
-          : `$${Number(currentPerfume.precio).toFixed(2)}`}
-      </div>
+      <div className="m-2">${perfume.precio?.toFixed(2) || "Consultar precio"}</div>
 
-      <Button
-        variant="outline-warning"
-        className="btn-perfume m-2"
-        onClick={() => addToCart(currentPerfume)}
-      >
-        Agregar Al Carrito
+      <Button variant="outline-warning" className="btn-perfume m-2" onClick={() => !disabled && addToCart(perfume)} disabled={disabled}>
+        Agregar al carrito
       </Button>
 
       {isAdmin && (
@@ -87,7 +83,6 @@ const PerfumeCard = ({ perfume = {}, isAdmin = false, onUpdateProduct }) => {
           >
             {showAdminControls ? "Ocultar controles" : "Modificar producto"}
           </Button>
-
           {showAdminControls && (
             <AdminControls
               perfume={currentPerfume}

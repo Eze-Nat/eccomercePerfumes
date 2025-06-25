@@ -12,7 +12,7 @@ const UserListContainer = () => {
 
   const fetchRoles = async () => {
     customFetch(
-      "/api/roles/",
+      "/roles/",
       "GET",
       null,
       (data) => {
@@ -29,7 +29,7 @@ const UserListContainer = () => {
 
   const fetchUsers = async () => {
     customFetch(
-      "/api/users/",
+      "/users/",
       "GET",
       null,
       (data) => {

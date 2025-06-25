@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Container, Button, Row, Col, Modal } from 'react-bootstrap';
 import UserForm from './UserForm';
 import UserList from './UserList';
-import { customFetch } from '../../utils/fetch/customFetch.js';
+import { customFetch } from '../../utils/fetch/customfetch.js';
 import { errorNotification, successNotification } from '../../utils/notifications/Notifications.jsx';
 
 const Users = () => {
@@ -29,7 +29,7 @@ const Users = () => {
 
   const fetchRoles = async () => {
     customFetch(
-      "/api/roles/",
+      "/roles/",
       "GET",
       null,
       (data) => {
@@ -46,7 +46,7 @@ const Users = () => {
 
   const fetchUsers = async () => {
     customFetch(
-      "/api/users/",
+      "/users/",
       "GET",
       null,
       (data) => {
@@ -96,7 +96,7 @@ const Users = () => {
 
     if (isEditing) {
       customFetch(
-        `/api/users/${idEditUser}`,
+        `/users/${idEditUser}`,
         "PUT",
         newUser,
         () => {
@@ -116,7 +116,7 @@ const Users = () => {
 
     else {
       customFetch(
-        `/api/users/`,
+        `/users/`,
         "POST",
         newUser,
         () => {
@@ -147,7 +147,7 @@ const Users = () => {
   const handleDelete = () => {
     if (userToDelete) {
       customFetch(
-        `/api/users/${userToDelete.id}`,
+        `/users/${userToDelete.id}`,
         "DELETE",
         null,
         () => {
@@ -201,10 +201,9 @@ const Users = () => {
 
       {showForm && (
         <UserForm
-          isAdmin={true}
           editingUser={isEditing}
           userData={userData}
-          roles={roles}
+          initialRoles={roles}
           onCancel={handleShowForm}
           onSuccess={handleFormSuccess}
           onError={handleFormError}

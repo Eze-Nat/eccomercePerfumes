@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { customFetch } from "../utils/fetch/customFetch";
+import { customFetch } from "../utils/fetch/customfetch";
 import {
   errorNotification,
   successNotification,
@@ -63,12 +63,12 @@ const Register = () => {
     };
 
     customFetch(
-      "/api/auth/register",
+      "/auth/register",
       "POST",
       userData,
       (data) => {
         successNotification("Registro exitoso");
-        login(data.token);
+        login(data);
         navigate("/dashboard");
       },
       (error) => {
