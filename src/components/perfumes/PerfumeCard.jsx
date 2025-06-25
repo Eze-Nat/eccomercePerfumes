@@ -1,26 +1,21 @@
 import { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
-import AdminControls from "../admin/AdminControls";
-import { useCart } from "../../contexts/cart/CartContextProvider";
-import { successNotification, errorNotification } from "../utils/notifications/Notifications";
-import Loader from "../utils/spinner/Loader";
-import { mapBackendToFrontend, mapFrontendToBackend } from "../utils/mapperDB/mappers";
 
-const PerfumeCard = ({ initialPerfume = {}, onUpdateProduct, isAdmin = false }) => {
+import { useCart } from "../../contexts/cart/CartContextProvider";
+import { successNotification } from "../utils/notifications/Notifications";
+import Loader from "../utils/spinner/Loader";
+import { mapBackendToFrontend } from "../utils/mapperDB/mappers";
+
+const PerfumeCard = ({ initialPerfume = {}, isAdmin = false }) => {
   
   const [perfume, setPerfume] = useState(initialPerfume);
   const [currentPerfume, setCurrentPerfume] = useState(mapBackendToFrontend(perfume));
-  const [showAdminControls, setShowAdminControls] = useState(false);
   const [showStockModal, setShowStockModal] = useState(false);
   
   const { addToCart } = useCart();
 
   
 
-/*   useEffect(() => {
-    setPerfume(initialPerfume);
-  }, [initialPerfume]);
-     */
   useEffect(() => {
     setCurrentPerfume(mapBackendToFrontend(perfume));
   }, [perfume]);
@@ -38,23 +33,7 @@ const PerfumeCard = ({ initialPerfume = {}, onUpdateProduct, isAdmin = false }) 
     successNotification("Producto agregado al carrito");
   };
 
-  const handleFieldChange = (field, value) => {
-    setCurrentPerfume((prev) => ({
-      ...prev,
-      [field]: field === "price" || field === "stock" ? parseFloat(value) || 0 : value,
-    }));
-  };
 
-  const handleSaveChanges = async () => {
-    try {
-      const updatedData = mapFrontendToBackend(currentPerfume);
-      await onUpdateProduct(updatedData);
-      setShowAdminControls(false);
-      successNotification("Producto actualizado con éxito");
-    } catch (error) {
-      errorNotification("Error al actualizar: " + error.message);
-    }
-  };
 
   if (!isAdmin && !perfume.active) return null;
 

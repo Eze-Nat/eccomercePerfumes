@@ -13,14 +13,13 @@ export const customFetch = async (
     const fullUrl = `${baseUrl}/api${url.startsWith("/") ? "" : "/"}${url}`;
 
     const token = localStorage.getItem("token");
-    console.log("Token obtenido en customFetch:", token); // linea para retirar
+
 
     const headers = {
       "Content-Type": "application/json",
       ...(token && !skipAuth && { Authorization: `Bearer ${token}` }),
     };
 
-    console.log("Fetch completo a:", fullUrl, "con headers:", headers);
 
     const response = await fetch(fullUrl, {
       method: fetch_method,

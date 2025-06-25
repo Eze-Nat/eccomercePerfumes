@@ -46,7 +46,6 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
     };
 
     try {
-      console.log("fetch desde checkout", orderData);
       const response = await customFetch("/order", "POST", orderData);
       successNotification("Orden creada exitosamente");
       onConfirm(response); // muestra el resumen desde CartPage

@@ -22,7 +22,6 @@ const Login = () => {
       "POST",
       credentials,
       (data) => {
-        console.log("DATA RECIBIDA:", data); // linea para eliminar
         login(data.token);
         successNotification("¡Inicio de sesión exitoso!");
         if(hasRole(["admin","superadmin"])) {
