@@ -48,10 +48,14 @@ main {
 
 .perfume h3,
 .movie p {
-  margin: 0;
-  width: 15rem;
-  height: 4rem;
+  margin: 0 0 1rem 0;
+  max-width: 15rem;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.2;
+  justify-self: center;
 }
+
+
 
 .perfume img {
   border-radius: 8px;
@@ -77,6 +81,13 @@ main {
   padding: 10px;
 }
 */
+
+.perfume-card img,
+.admin-product img {
+  border-radius: 8px;
+}
+
+
 .perfume-image-container {
   width: 300px;
   height: 300px;
@@ -98,6 +109,8 @@ main {
   gap: 20px;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); /* Opcional: sombra para mejor contraste */
 }
+
+
 
 /* Al final de tu archivo styles.css o dentro de la sección de formulario */
 

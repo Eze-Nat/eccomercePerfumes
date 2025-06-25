@@ -4,14 +4,15 @@ import {
   successNotification,
   errorNotification,
 } from "../../utils/notifications/Notifications";
-import { customFetch } from "../../utils/fetch/customFetch";
-import { Button } from "react-bootstrap";
+import { customFetch } from "../../utils/fetch/customfetch";
+import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
   const { userData } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("Efectivo"); // valor por defecto
 
   const handleSubmit = async () => {
     if (!userData?.id) {
@@ -20,11 +21,22 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
       return;
     }
 
+    if (!userData?.address) {
+      errorNotification("Tu cuenta no tiene una dirección configurada.");
+      return;
+    }
+
+    if (!paymentMethod) {
+      errorNotification("Por favor, seleccioná un método de pago.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     const orderData = {
       user_id: userData.id,
-      address: userData.address,
+      shippingAddress: userData.address,
+      paymentMethod,
       total,
       items: cart.map((item) => ({
         product_id: item.id,
@@ -34,7 +46,8 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
     };
 
     try {
-      const response = await customFetch("/api/order", "POST", orderData);
+      console.log("fetch desde checkout", orderData);
+      const response = await customFetch("/order", "POST", orderData);
       successNotification("Orden creada exitosamente");
       onConfirm(response); // muestra el resumen desde CartPage
     } catch (error) {
@@ -49,7 +62,7 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
     <div className="checkout-form">
       <h3>Confirmar Compra</h3>
       <p>
-        <strong>Nombre:</strong> {userData?.name}
+        <strong>Nombre:</strong> {userData?.first_name} {userData?.last_name}
       </p>
       <p>
         <strong>Email:</strong> {userData?.email}
@@ -61,8 +74,21 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
         <strong>Total:</strong> ${total.toFixed(2)}
       </p>
 
+     <Form.Group className="mb-3" controlId="paymentMethod">
+  <Form.Label className="fw-bold">Método de Pago</Form.Label>
+  <Form.Select
+    value={paymentMethod}
+    onChange={(e) => setPaymentMethod(e.target.value)}
+    disabled={isSubmitting}
+    className="w-auto" // Esto hace que el select ocupe solo el espacio necesario
+  >
+    <option value="Efectivo">Efectivo</option>
+    <option value="Tarjeta">Tarjeta</option>
+  </Form.Select>
+</Form.Group>
+
       <div className="checkout-actions">
-        <Button variant="secondary" onClick={onCancel} disabled={isSubmitting}>
+        <Button variant="secondary" onClick={onCancel} disabled={isSubmitting} className="m-3">
           Cancelar
         </Button>
         <Button

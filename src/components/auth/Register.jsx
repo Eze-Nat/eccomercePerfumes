@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { customFetch } from "../utils/fetch/customFetch";
+import { customFetch } from "../utils/fetch/customfetch";
 import {
   errorNotification,
   successNotification,
@@ -63,13 +63,13 @@ const Register = () => {
     };
 
     customFetch(
-      "/api/auth/register",
+      "/auth/register",
       "POST",
       userData,
       (data) => {
         successNotification("Registro exitoso");
-        login(data.token);
-        navigate("/dashboard");
+        login(data);
+        navigate("/");
       },
       (error) => {
         if (error.status === 409) {
@@ -86,78 +86,168 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Crear cuenta</h2>
+    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-dark">
+      <div className="card border-0 shadow-lg" style={{ 
+        width: '100%', 
+        maxWidth: '450px',
+        background: 'rgba(30, 30, 30, 0.9)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
+        <div className="card-body p-4 p-md-5">
+          <h2 className="text-center mb-4 text-white">Crear cuenta</h2>
+          
+          <form onSubmit={handleSubmit}>
+            {/* Nombre */}
+            <div className="mb-3">
+              <label className="form-label text-white-50">Nombre</label>
+              <input
+                type="text"
+                name="first_name"
+                className={`form-control bg-dark text-white border-secondary ${
+                  errors.first_name ? 'is-invalid' : ''
+                }`}
+                value={formData.first_name}
+                onChange={handleChange}
+                placeholder="Ingresa tu nombre"
+              />
+              {errors.first_name && (
+                <div className="invalid-feedback d-block">{errors.first_name}</div>
+              )}
+            </div>
 
-      <input
-        type="text"
-        name="first_name"
-        placeholder="Nombre"
-        value={formData.first_name}
-        onChange={handleChange}
-      />
-      {errors.first_name && <p className="text-danger">{errors.first_name}</p>}
+            {/* Apellido */}
+            <div className="mb-3">
+              <label className="form-label text-white-50">Apellido</label>
+              <input
+                type="text"
+                name="last_name"
+                className={`form-control bg-dark text-white border-secondary ${
+                  errors.last_name ? 'is-invalid' : ''
+                }`}
+                value={formData.last_name}
+                onChange={handleChange}
+                placeholder="Ingresa tu apellido"
+              />
+              {errors.last_name && (
+                <div className="invalid-feedback d-block">{errors.last_name}</div>
+              )}
+            </div>
 
-      <input
-        type="text"
-        name="last_name"
-        placeholder="Apellido"
-        value={formData.last_name}
-        onChange={handleChange}
-      />
-      {errors.last_name && <p className="text-danger">{errors.last_name}</p>}
+            {/* Email */}
+            <div className="mb-3">
+              <label className="form-label text-white-50">Correo electrónico</label>
+              <input
+                type="email"
+                name="email"
+                className={`form-control bg-dark text-white border-secondary ${
+                  errors.email ? 'is-invalid' : ''
+                }`}
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="ejemplo@email.com"
+                autoComplete="email"
+              />
+              {errors.email && (
+                <div className="invalid-feedback d-block">{errors.email}</div>
+              )}
+            </div>
 
-      <input
-        type="email"
-        name="email"
-        placeholder="Correo electrónico"
-        value={formData.email}
-        onChange={handleChange}
-        autoComplete="email"
-      />
-      {errors.email && <p className="text-danger">{errors.email}</p>}
+            {/* Dirección */}
+            <div className="mb-3">
+              <label className="form-label text-white-50">Dirección</label>
+              <input
+                type="text"
+                name="address"
+                className={`form-control bg-dark text-white border-secondary ${
+                  errors.address ? 'is-invalid' : ''
+                }`}
+                value={formData.address}
+                onChange={handleChange}
+                placeholder="Tu dirección completa"
+              />
+              {errors.address && (
+                <div className="invalid-feedback d-block">{errors.address}</div>
+              )}
+            </div>
 
-      <input
-        type="text"
-        name="address"
-        placeholder="Dirección"
-        value={formData.address}
-        onChange={handleChange}
-      />
-      {errors.address && <p className="text-danger">{errors.address}</p>}
+            {/* Contraseña */}
+            <div className="mb-3">
+              <label className="form-label text-white-50">Contraseña</label>
+              <input
+                type="password"
+                name="password"
+                className={`form-control bg-dark text-white border-secondary ${
+                  errors.password ? 'is-invalid' : ''
+                }`}
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Mínimo 6 caracteres"
+                autoComplete="new-password"
+              />
+              {errors.password && (
+                <div className="invalid-feedback d-block">{errors.password}</div>
+              )}
+            </div>
 
-      <input
-        type="password"
-        name="password"
-        placeholder="Contraseña"
-        value={formData.password}
-        onChange={handleChange}
-        autoComplete="new-password"
-      />
-      {errors.password && <p className="text-danger">{errors.password}</p>}
+            {/* Confirmar Contraseña */}
+            <div className="mb-4">
+              <label className="form-label text-white-50">Confirmar contraseña</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                className={`form-control bg-dark text-white border-secondary ${
+                  errors.confirmPassword ? 'is-invalid' : ''
+                }`}
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Repite tu contraseña"
+                autoComplete="new-password"
+              />
+              {errors.confirmPassword && (
+                <div className="invalid-feedback d-block">{errors.confirmPassword}</div>
+              )}
+            </div>
 
-      <input
-        type="password"
-        name="confirmPassword"
-        placeholder="Confirmar contraseña"
-        value={formData.confirmPassword}
-        onChange={handleChange}
-        autoComplete="new-password"
-      />
-      {errors.confirmPassword && (
-        <p className="text-danger">{errors.confirmPassword}</p>
-      )}
+            {/* Botones */}
+            <div className="d-flex justify-content-between">
+              <button
+                type="button"
+                onClick={() => navigate("/")}
+                className="btn btn-outline-secondary"
+              >
+                Cancelar
+              </button>
+              <button 
+                type="submit" 
+                className="btn btn-primary px-4"
+              >
+                Registrarse
+              </button>
+            </div>
+          </form>
 
-      <button
-        type="button"
-        onClick={handleCancel}
-        style={{ marginLeft: "10px" }}
-      >
-        Cancelar
-      </button>
-      <button type="submit">Registrarse</button>
-    </form>
+          {/* Enlace a Login */}
+          <div className="text-center mt-4 pt-3 border-top border-secondary">
+            <p className="text-white-50 mb-0">
+              ¿Ya tienes cuenta?{" "}
+              <span
+                className="text-primary"
+                role="button"
+                onClick={() => navigate("/login")}
+                style={{ cursor: 'pointer' }}
+              >
+                Inicia sesión aquí
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
+
+
+
 
 export default Register;
