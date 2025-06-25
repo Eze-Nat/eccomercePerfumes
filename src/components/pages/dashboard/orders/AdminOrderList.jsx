@@ -1,7 +1,18 @@
 import { useEffect, useState } from "react";
-import { Card, Button, Spinner } from "react-bootstrap";
+import {
+  Card,
+  Button,
+  Spinner,
+  Container,
+  Row,
+  Col,
+  Modal,
+} from "react-bootstrap";
 import { customFetch } from "../../../utils/fetch/customFetch";
-import { errorNotification } from "../../../utils/notifications/Notifications";
+import {
+  errorNotification,
+  successNotification,
+} from "../../../utils/notifications/Notifications";
 import AdminOrderDetailModal from "./orders.modal/AdminOrderDetailModal";
 
 const AdminOrderList = () => {
@@ -9,6 +20,9 @@ const AdminOrderList = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [orderToDelete, setOrderToDelete] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     fetchAllOrders();
@@ -42,6 +56,37 @@ const AdminOrderList = () => {
     setShowModal(false);
   };
 
+  // Abrir modal confirmación para eliminar
+  const confirmDeleteOrder = (order) => {
+    setOrderToDelete(order);
+    setShowDeleteConfirm(true);
+  };
+
+  // Cancelar eliminación
+  const cancelDelete = () => {
+    setOrderToDelete(null);
+    setShowDeleteConfirm(false);
+  };
+
+  // Eliminar orden
+  const handleDeleteOrder = async () => {
+    if (!orderToDelete) return;
+    console.log("orden desde fetch", orderToDelete);
+
+    setDeleting(true);
+    try {
+      await customFetch(`/order/${orderToDelete.id}`, "DELETE", null);
+      successNotification(`Orden #${orderToDelete.id} eliminada.`);
+      // Actualizar lista
+      setOrders((prev) => prev.filter((o) => o.id !== orderToDelete.id));
+      cancelDelete();
+    } catch (error) {
+      errorNotification("Error al eliminar la orden.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading)
     return (
       <div className="d-flex justify-content-center mt-4">
@@ -53,17 +98,17 @@ const AdminOrderList = () => {
     return <p className="text-center mt-4">No hay órdenes registradas.</p>;
 
   return (
-    <>
-      <h3 className="mb-4">Órdenes de Compra</h3>
+    <Container fluid className="mt-4">
+      <h3 className="mb-4">Ordenes de Compra</h3>
 
-      <div className="row">
+      <Row>
         {orders.map((order) => (
-          <div className="col-md-6 mb-3" key={order.id}>
+          <Col md={6} key={order.id} className="mb-3">
             <Card>
               <Card.Body>
-                <Card.Title>Orden #{order.id}</Card.Title>
+                <Card.Title>Orden # {order.id}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">
-                  Usuario ID: {order.user_id}
+                  Usuario: {order.User?.first_name} {order.User?.last_name}
                 </Card.Subtitle>
                 <Card.Text>
                   Fecha: {new Date(order.orderDate).toLocaleDateString()} <br />
@@ -76,19 +121,52 @@ const AdminOrderList = () => {
                   onClick={() => openModal(order)}
                 >
                   Ver Detalles
+                </Button>{" "}
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => confirmDeleteOrder(order)}
+                >
+                  Eliminar
                 </Button>
               </Card.Body>
             </Card>
-          </div>
+          </Col>
         ))}
-      </div>
+      </Row>
 
       <AdminOrderDetailModal
         show={showModal}
         onHide={closeModal}
         order={selectedOrder}
       />
-    </>
+
+      {/* Modal confirmación eliminar */}
+      <Modal show={showDeleteConfirm} onHide={cancelDelete} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar eliminación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          ¿Estás seguro que deseas eliminar la orden # {orderToDelete?.id}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={cancelDelete}
+            disabled={deleting}
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="danger"
+            onClick={handleDeleteOrder}
+            disabled={deleting}
+          >
+            {deleting ? "Eliminando..." : "Eliminar"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
   );
 };
 
