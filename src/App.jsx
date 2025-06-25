@@ -30,11 +30,6 @@ function App() {
           <Route element={<ProtectedLogin />}>
             <Route path="/cart" element={<CartPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/users" element={<UserListContainer />} />
-            <Route path="/orders" element={<AdminOrderList />} />{" "}
-            {/* ✅ Esta es la nueva ruta */}
-            <Route path="/orders" element={<AdminOrderList />} />{" "}
-            {/* ✅ Esta es la nueva ruta */}
           </Route>
 
           {/* 404 */}
