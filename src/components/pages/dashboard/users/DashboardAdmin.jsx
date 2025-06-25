@@ -16,7 +16,7 @@ const DashboardAdmin = () => {
     <div className="container mt-5">
       <h1>Panel de Administración admin</h1>
       <p>Bienvenido{userData?.first_name ? `, ${userData.first_name}` : ""}</p>
-      <UserProfile />
+
       <div className="mb-3">
         <Button
           variant={showOrders ? "outline-secondary" : "primary"}
@@ -34,16 +34,10 @@ const DashboardAdmin = () => {
           {showOrders ? "Ocultar Productos" : "Productos"}
         </Button>
       </div>
-      
+
       {showProducts && <ProductsDashboard isAdmin={true} />}
       {showOrders && <OrdersDashboard isAdmin={true} />}
-      
-
-
-      </div>
-
-      
-
+    </div>
   );
 };
 

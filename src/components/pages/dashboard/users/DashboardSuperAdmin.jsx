@@ -23,7 +23,7 @@ const DashboardSuperAdmin = () => {
           onClick={() => setShowUsers(!showUsers)}
           className="me-2"
         >
-          {showUsers ? "Ocultar Usuarios" : "Gestionar Usuarios"}
+          {showUsers ? "Ocultar Usuarios" : "Usuarios"}
         </Button>
 
         <Button
@@ -34,7 +34,7 @@ const DashboardSuperAdmin = () => {
           {showOrders ? "Ocultar Compras" : "Compras"}
         </Button>
 
-      <Button
+        <Button
           variant={showProducts ? "outline-secondary" : "primary"}
           onClick={() => setShowProducts(!showProducts)}
           className="me-2"
@@ -42,7 +42,7 @@ const DashboardSuperAdmin = () => {
           {showOrders ? "Ocultar Productos" : "Productos"}
         </Button>
       </div>
-      
+
       {showProducts && <ProductsDashboard isAdmin={true} />}
       {showUsers && <Users />}
       {showOrders && <OrdersDashboard isAdmin={true} />}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Spinner, Button, Card } from "react-bootstrap";
+import { Spinner, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { customFetch } from "../../../utils/fetch/customFetch";
 import { errorNotification } from "../../../utils/notifications/Notifications";
 import OrderDetailModal from "./orders.modal/UserOrderDetailModal";
@@ -30,13 +30,11 @@ const UserOrderList = () => {
           "Error al cargar las órdenes. Por favor, inicia sesión nuevamente."
         );
       },
-      false // aseguramos que se envíe token para auth
+      false
     );
   };
 
   const openModal = (order) => {
-    console.log("desde order", order);
-
     setSelectedOrder(order);
     setShowModal(true);
   };
@@ -46,56 +44,59 @@ const UserOrderList = () => {
     setShowModal(false);
   };
 
-  if (loading)
-    return (
-      <div className="d-flex justify-content-center mt-4">
-        <Spinner animation="border" variant="primary" />
-      </div>
-    );
-
-  if (orders.length === 0)
-    return <p className="text-center mt-4">No hay órdenes registradas.</p>;
-
   return (
-    <>
+    <Container fluid className="mt-4">
       <h3 className="mb-4">Mis Órdenes de Compra</h3>
 
-      <div className="row">
-        {orders.map((order) => (
-          <div className="col-md-6 mb-3" key={order.id}>
-            <Card>
-              <Card.Body>
-                <Card.Title>Orden #{order.id}</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">
-                  Fecha:{" "}
-                  {new Date(
-                    order.orderDate || order.createdAt
-                  ).toLocaleDateString()}
-                </Card.Subtitle>
-                <Card.Text>
-                  Estado: <strong>{order.status}</strong>
-                  <br />
-                  Total: <strong>${order.total.toFixed(2)}</strong>
-                </Card.Text>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => openModal(order)}
-                >
-                  Ver Detalles
-                </Button>
-              </Card.Body>
-            </Card>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <div className="d-flex justify-content-center mt-4">
+          <Spinner animation="border" variant="primary" />
+        </div>
+      ) : orders.length === 0 ? (
+        <p className="text-center mt-4">No hay órdenes registradas.</p>
+      ) : (
+        <Row>
+          {orders.map((order) => (
+            <Col md={6} key={order.id} className="mb-3">
+              <Card>
+                <Card.Body>
+                  <Card.Title>Orden # {order.id}</Card.Title>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    Fecha:{" "}
+                    {new Date(
+                      order.orderDate || order.createdAt
+                    ).toLocaleDateString()}
+                  </Card.Subtitle>
+                  <Card.Text>
+                    Comprador:{" "}
+                    <strong>
+                      {order.User?.first_name} {order.User?.last_name}
+                    </strong>
+                    <br />
+                    Estado: <strong>{order.status}</strong>
+                    <br />
+                    Total: <strong>${order.total.toFixed(2)}</strong>
+                  </Card.Text>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => openModal(order)}
+                  >
+                    Ver Detalles
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
 
       <OrderDetailModal
         show={showModal}
         onHide={closeModal}
         order={selectedOrder}
       />
-    </>
+    </Container>
   );
 };
 
