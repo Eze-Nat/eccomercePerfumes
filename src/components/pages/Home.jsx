@@ -12,7 +12,14 @@ const Home = () => {
   useEffect(() => {
     const fetchPerfumes = async () => {
       try {
-        const data = await customFetch("/products", "GET", null, undefined, undefined, true);
+        const data = await customFetch(
+          "/products",
+          "GET",
+          null,
+          undefined,
+          undefined,
+          true
+        );
 
         const backendData = data.map((item) => ({
           id: item.id,
@@ -42,7 +49,6 @@ const Home = () => {
 
   const updateProductInBackend = async (product) => {
     try {
-      // Mapeo para enviar solo las keys que espera el backend
       const payload = {
         name: product.name,
         description: product.description,
@@ -64,7 +70,6 @@ const Home = () => {
 
       console.log("Respuesta del backend:", response);
 
-      // Mapear respuesta para actualizar estado local con los nombres correctos
       const backendData = {
         id: response.id,
         titulo: response.name,
@@ -77,7 +82,6 @@ const Home = () => {
         active: response.active,
       };
 
-      // Actualizo estado local
       setPerfumes((prev) =>
         prev.map((p) => (p.id === backendData.id ? backendData : p))
       );
@@ -88,7 +92,7 @@ const Home = () => {
       throw error;
     }
   };
-  
+
   return (
     <>
       <Navbar onSearchPerfume={setSearchPerfume} />

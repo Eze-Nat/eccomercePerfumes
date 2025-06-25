@@ -56,19 +56,16 @@ const AdminOrderList = () => {
     setShowModal(false);
   };
 
-  // Abrir modal confirmación para eliminar
   const confirmDeleteOrder = (order) => {
     setOrderToDelete(order);
     setShowDeleteConfirm(true);
   };
 
-  // Cancelar eliminación
   const cancelDelete = () => {
     setOrderToDelete(null);
     setShowDeleteConfirm(false);
   };
 
-  // Eliminar orden
   const handleDeleteOrder = async () => {
     if (!orderToDelete) return;
     console.log("orden desde fetch", orderToDelete);
@@ -77,7 +74,7 @@ const AdminOrderList = () => {
     try {
       await customFetch(`/order/${orderToDelete.id}`, "DELETE", null);
       successNotification(`Orden #${orderToDelete.id} eliminada.`);
-      // Actualizar lista
+
       setOrders((prev) => prev.filter((o) => o.id !== orderToDelete.id));
       cancelDelete();
     } catch (error) {
@@ -141,7 +138,6 @@ const AdminOrderList = () => {
         order={selectedOrder}
       />
 
-      {/* Modal confirmación eliminar */}
       <Modal show={showDeleteConfirm} onHide={cancelDelete} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirmar eliminación</Modal.Title>

@@ -12,7 +12,7 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
   const { userData } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("Efectivo"); // valor por defecto
+  const [paymentMethod, setPaymentMethod] = useState("Efectivo");
 
   const handleSubmit = async () => {
     if (!userData?.id) {
@@ -49,7 +49,7 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
       console.log("fetch desde checkout", orderData);
       const response = await customFetch("/order", "POST", orderData);
       successNotification("Orden creada exitosamente");
-      onConfirm(response); // muestra el resumen desde CartPage
+      onConfirm(response);
     } catch (error) {
       console.error("Error al enviar la orden:", error);
       errorNotification("Ocurrió un error al procesar la compra.");
@@ -74,21 +74,26 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
         <strong>Total:</strong> ${total.toFixed(2)}
       </p>
 
-     <Form.Group className="mb-3" controlId="paymentMethod">
-  <Form.Label className="fw-bold">Método de Pago</Form.Label>
-  <Form.Select
-    value={paymentMethod}
-    onChange={(e) => setPaymentMethod(e.target.value)}
-    disabled={isSubmitting}
-    className="w-auto" // Esto hace que el select ocupe solo el espacio necesario
-  >
-    <option value="Efectivo">Efectivo</option>
-    <option value="Tarjeta">Tarjeta</option>
-  </Form.Select>
-</Form.Group>
+      <Form.Group className="mb-3" controlId="paymentMethod">
+        <Form.Label className="fw-bold">Método de Pago</Form.Label>
+        <Form.Select
+          value={paymentMethod}
+          onChange={(e) => setPaymentMethod(e.target.value)}
+          disabled={isSubmitting}
+          className="w-auto"
+        >
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+        </Form.Select>
+      </Form.Group>
 
       <div className="checkout-actions">
-        <Button variant="secondary" onClick={onCancel} disabled={isSubmitting} className="m-3">
+        <Button
+          variant="secondary"
+          onClick={onCancel}
+          disabled={isSubmitting}
+          className="m-3"
+        >
           Cancelar
         </Button>
         <Button

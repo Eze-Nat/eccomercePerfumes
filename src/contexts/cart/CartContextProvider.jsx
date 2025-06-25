@@ -15,19 +15,17 @@ export const CartContextProvider = ({ children }) => {
   }, [cart]);
 
   const addToCart = (product) => {
-    // Verificar stock antes de agregar
     if (product.stock <= 0) {
       return;
     }
-    
+
     setCart((prev) => {
       const existingProduct = prev.find((item) => item.id === product.id);
-      
-      // Verificar stock al aumentar cantidad
-      if (existingProduct && (existingProduct.cantidad >= product.stock)) {
+
+      if (existingProduct && existingProduct.cantidad >= product.stock) {
         return prev;
       }
-      
+
       if (existingProduct) {
         return prev.map((item) =>
           item.id === product.id

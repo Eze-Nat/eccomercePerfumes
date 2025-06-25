@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import { useCart } from "../../../contexts//cart/CartContextProvider"; // Importamos el carrito
-import useAuth from "../../../hooks/useAuth"; // Importamos el hook de autenticación
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { useCart } from "../../../contexts//cart/CartContextProvider";
+import useAuth from "../../../hooks/useAuth";
 import "./navbar.css";
 
 const Navbar = ({ onSearchPerfume }) => {
   const { cart } = useCart();
   const [searchPerfume, setSearchPerfume] = useState("");
   const timeoutRef = useRef(null);
-  const { isAuth, logout } = useAuth()
+  const { isAuth, logout } = useAuth();
   const location = useLocation();
 
-  const showSearchBar = ['/', "/search"].includes(location.pathname);
+  const showSearchBar = ["/", "/search"].includes(location.pathname);
 
   useEffect(() => {
     return () => {
@@ -55,7 +55,6 @@ const Navbar = ({ onSearchPerfume }) => {
           Perfumería El Turco
         </Link>
 
-
         {showSearchBar && (
           <div className="flex-grow-1 d-flex justify-content-center">
             <form className="d-flex" role="search" onSubmit={handleOnSubmit}>
@@ -78,9 +77,10 @@ const Navbar = ({ onSearchPerfume }) => {
           {isAuth ? (
             <>
               <NavLink
-                to="/dashboard" replace
+                to="/dashboard"
+                replace
                 className={({ isActive }) =>
-                  `text-white ${isActive ? 'active-link' : ''}`
+                  `text-white ${isActive ? "active-link" : ""}`
                 }
                 title="Dashboard"
               >
@@ -97,9 +97,10 @@ const Navbar = ({ onSearchPerfume }) => {
             </>
           ) : (
             <NavLink
-              to="/login" replace
+              to="/login"
+              replace
               className={({ isActive }) =>
-                `text-white ${isActive ? 'active-link' : ''}`
+                `text-white ${isActive ? "active-link" : ""}`
               }
               title="Iniciar sesión"
             >
@@ -110,7 +111,7 @@ const Navbar = ({ onSearchPerfume }) => {
           <NavLink
             to="/cart"
             className={({ isActive }) =>
-              `text-white position-relative ${isActive ? 'active-link' : ''}`
+              `text-white position-relative ${isActive ? "active-link" : ""}`
             }
             title="Carrito"
           >

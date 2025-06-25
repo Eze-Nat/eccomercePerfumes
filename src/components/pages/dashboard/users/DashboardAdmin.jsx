@@ -3,14 +3,14 @@ import { Button } from "react-bootstrap";
 import Users from "../../../admin/users/Users";
 import OrdersDashboard from "../orders/OrderDashboard";
 import ProductsDashboard from "../Products/ProductDashboard";
-import UserProfile from "../../../users/UsersProfile";
-import useAuth from "../../../../hooks/useAuth"; // Asegurate de importar correctamente tu hook
+
+import useAuth from "../../../../hooks/useAuth";
 
 const DashboardAdmin = () => {
   const [showOrders, setShowOrders] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
 
-  const { userData } = useAuth(); // <- Obtenemos al usuario autenticado
+  const { userData } = useAuth();
 
   return (
     <div className="container mt-5">
