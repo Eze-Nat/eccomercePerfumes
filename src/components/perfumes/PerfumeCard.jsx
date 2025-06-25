@@ -90,7 +90,7 @@ const PerfumeCard = ({ initialPerfume = {}, onUpdateProduct, isAdmin = false }) 
       <div className="m-2">
         ${perfume.precio?.toFixed(2) || "Consultar precio"}
         {perfume.stock > 0 && (
-          <small className="d-block text-muted">{perfume.stock} disponibles</small>
+          <small className="d-block text-white">{perfume.stock} disponibles</small>
         )}
       </div>
 
