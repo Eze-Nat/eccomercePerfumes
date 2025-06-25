@@ -54,7 +54,7 @@ const Home = () => {
         active: product.active,
       };
 
-      console.log("Payload a enviar al backend:", payload);
+
 
       const response = await customFetch(
         `/products/${product.id}`,
@@ -62,9 +62,7 @@ const Home = () => {
         payload
       );
 
-      console.log("Respuesta del backend:", response);
-
-      // Mapear respuesta para actualizar estado local con los nombres correctos
+      // Mapeo de la respuesta del backend al formato esperado por el frontend
       const backendData = {
         id: response.id,
         titulo: response.name,

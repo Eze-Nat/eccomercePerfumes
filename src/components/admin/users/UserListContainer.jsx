@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import UserList from "./UserList";
 import { customFetch } from "../../utils/fetch/customFetch";
 import { useNavigate } from "react-router-dom";
-import { errorNotification, successNotification } from '../../utils/notifications/Notifications.jsx';
-
+import {
+  errorNotification,
+  successNotification,
+} from "../../utils/notifications/Notifications.jsx";
 
 const UserListContainer = () => {
   const [users, setUsers] = useState([]);
