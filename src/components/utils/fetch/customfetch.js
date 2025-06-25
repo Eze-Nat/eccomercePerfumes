@@ -8,19 +8,16 @@ export const customFetch = async (
 ) => {
   
   try {
-   // 1. Construcción correcta de la URL
     const baseUrl = import.meta.env.VITE_BASE_SERVER_URL || "http://localhost:3000";
     const fullUrl = `${baseUrl}/api${url.startsWith("/") ? "" : "/"}${url}`;
 
     const token = localStorage.getItem("token");
-    console.log("Token obtenido en customFetch:", token); // linea para retirar
 
     const headers = {
       "Content-Type": "application/json",
       ...(token && !skipAuth && { Authorization: `Bearer ${token}` }),
     };
 
-    console.log("Fetch completo a:", fullUrl, "con headers:", headers);
 
     const response = await fetch(fullUrl, {
       method: fetch_method,
@@ -45,6 +42,6 @@ if (!response.ok) {
   } catch (error) {
     console.error("Error en customFetch:", error.message);
     onError(error);
-    throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    throw error;
   }
 };

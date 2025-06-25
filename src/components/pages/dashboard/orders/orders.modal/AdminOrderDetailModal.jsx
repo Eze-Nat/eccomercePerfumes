@@ -37,8 +37,8 @@ const AdminOrderDetailModal = ({ show, onHide, order, onUpdate }) => {
         { status: switchStatus },
         () => {
           successNotification("Estado actualizado correctamente.");
-          if (onUpdate) onUpdate(); // opcional para refrescar lista desde el padre
-          onHide(); // cierra modal
+          if (onUpdate) onUpdate();
+          onHide();
         },
         (err) => {
           console.error("Error actualizando estado:", err.message);

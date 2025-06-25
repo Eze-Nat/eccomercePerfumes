@@ -5,8 +5,7 @@ import UserProfile from "../../../users/UsersProfile";
 import { Button } from "react-bootstrap";
 
 const DashboardUser = () => {
-  const { userData } = useAuth(); // Obtenemos el usuario logueado
-
+  const { userData } = useAuth();
   const [showProfile, setShowProfile] = useState(false);
   const [showOrders, setShowOrders] = useState(false);
 

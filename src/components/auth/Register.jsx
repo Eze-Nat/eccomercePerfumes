@@ -1,13 +1,12 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { customFetch } from "../utils/fetch/customfetch";
+import { customFetch } from "../utils/fetch/customFetch";
 import {
   errorNotification,
   successNotification,
   warningNotification,
 } from "../utils/notifications/Notifications";
-import AuthContext from "../../contexts/auth/Auth.Context"; // Importa el contexto de autenticación
-
+import AuthContext from "../../contexts/auth/Auth.Context";
 const Register = () => {
   const [formData, setFormData] = useState({
     first_name: "",
@@ -20,7 +19,7 @@ const Register = () => {
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // Accede a la función login del contexto
+  const { login } = useContext(AuthContext);
 
   const validate = () => {
     const newErrors = {};
@@ -67,7 +66,6 @@ const Register = () => {
       "POST",
       userData,
       (data) => {
-        console.log("data", data);
         successNotification("Registro exitoso");
         login(data.token);
         navigate("/");
@@ -88,61 +86,67 @@ const Register = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center min-vh-100 bg-dark">
-      <div className="card border-0 shadow-lg" style={{ 
-        width: '100%', 
-        maxWidth: '450px',
-        background: 'rgba(30, 30, 30, 0.9)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255, 255, 255, 0.1)'
-      }}>
+      <div
+        className="card border-0 shadow-lg"
+        style={{
+          width: "100%",
+          maxWidth: "450px",
+          background: "rgba(30, 30, 30, 0.9)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+        }}
+      >
         <div className="card-body p-4 p-md-5">
           <h2 className="text-center mb-4 text-white">Crear cuenta</h2>
-          
+
           <form onSubmit={handleSubmit}>
-            {/* Nombre */}
             <div className="mb-3">
               <label className="form-label text-white-50">Nombre</label>
               <input
                 type="text"
                 name="first_name"
                 className={`form-control bg-dark text-white border-secondary ${
-                  errors.first_name ? 'is-invalid' : ''
+                  errors.first_name ? "is-invalid" : ""
                 }`}
                 value={formData.first_name}
                 onChange={handleChange}
                 placeholder="Ingresa tu nombre"
               />
               {errors.first_name && (
-                <div className="invalid-feedback d-block">{errors.first_name}</div>
+                <div className="invalid-feedback d-block">
+                  {errors.first_name}
+                </div>
               )}
             </div>
 
-            {/* Apellido */}
             <div className="mb-3">
               <label className="form-label text-white-50">Apellido</label>
               <input
                 type="text"
                 name="last_name"
                 className={`form-control bg-dark text-white border-secondary ${
-                  errors.last_name ? 'is-invalid' : ''
+                  errors.last_name ? "is-invalid" : ""
                 }`}
                 value={formData.last_name}
                 onChange={handleChange}
                 placeholder="Ingresa tu apellido"
               />
               {errors.last_name && (
-                <div className="invalid-feedback d-block">{errors.last_name}</div>
+                <div className="invalid-feedback d-block">
+                  {errors.last_name}
+                </div>
               )}
             </div>
 
-            {/* Email */}
             <div className="mb-3">
-              <label className="form-label text-white-50">Correo electrónico</label>
+              <label className="form-label text-white-50">
+                Correo electrónico
+              </label>
               <input
                 type="email"
                 name="email"
                 className={`form-control bg-dark text-white border-secondary ${
-                  errors.email ? 'is-invalid' : ''
+                  errors.email ? "is-invalid" : ""
                 }`}
                 value={formData.email}
                 onChange={handleChange}
@@ -154,14 +158,13 @@ const Register = () => {
               )}
             </div>
 
-            {/* Dirección */}
             <div className="mb-3">
               <label className="form-label text-white-50">Dirección</label>
               <input
                 type="text"
                 name="address"
                 className={`form-control bg-dark text-white border-secondary ${
-                  errors.address ? 'is-invalid' : ''
+                  errors.address ? "is-invalid" : ""
                 }`}
                 value={formData.address}
                 onChange={handleChange}
@@ -172,14 +175,13 @@ const Register = () => {
               )}
             </div>
 
-            {/* Contraseña */}
             <div className="mb-3">
               <label className="form-label text-white-50">Contraseña</label>
               <input
                 type="password"
                 name="password"
                 className={`form-control bg-dark text-white border-secondary ${
-                  errors.password ? 'is-invalid' : ''
+                  errors.password ? "is-invalid" : ""
                 }`}
                 value={formData.password}
                 onChange={handleChange}
@@ -187,18 +189,21 @@ const Register = () => {
                 autoComplete="new-password"
               />
               {errors.password && (
-                <div className="invalid-feedback d-block">{errors.password}</div>
+                <div className="invalid-feedback d-block">
+                  {errors.password}
+                </div>
               )}
             </div>
 
-            {/* Confirmar Contraseña */}
             <div className="mb-4">
-              <label className="form-label text-white-50">Confirmar contraseña</label>
+              <label className="form-label text-white-50">
+                Confirmar contraseña
+              </label>
               <input
                 type="password"
                 name="confirmPassword"
                 className={`form-control bg-dark text-white border-secondary ${
-                  errors.confirmPassword ? 'is-invalid' : ''
+                  errors.confirmPassword ? "is-invalid" : ""
                 }`}
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -206,11 +211,12 @@ const Register = () => {
                 autoComplete="new-password"
               />
               {errors.confirmPassword && (
-                <div className="invalid-feedback d-block">{errors.confirmPassword}</div>
+                <div className="invalid-feedback d-block">
+                  {errors.confirmPassword}
+                </div>
               )}
             </div>
 
-            {/* Botones */}
             <div className="d-flex justify-content-between">
               <button
                 type="button"
@@ -219,16 +225,12 @@ const Register = () => {
               >
                 Cancelar
               </button>
-              <button 
-                type="submit" 
-                className="btn btn-primary px-4"
-              >
+              <button type="submit" className="btn btn-primary px-4">
                 Registrarse
               </button>
             </div>
           </form>
 
-          {/* Enlace a Login */}
           <div className="text-center mt-4 pt-3 border-top border-secondary">
             <p className="text-white-50 mb-0">
               ¿Ya tienes cuenta?{" "}
@@ -236,7 +238,7 @@ const Register = () => {
                 className="text-primary"
                 role="button"
                 onClick={() => navigate("/login")}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
               >
                 Inicia sesión aquí
               </span>
@@ -247,8 +249,5 @@ const Register = () => {
     </div>
   );
 };
-
-
-
 
 export default Register;

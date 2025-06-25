@@ -25,11 +25,6 @@ main {
   margin-top: 60px; 
   flex-grow: 1; 
 }
-/* form {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-} */
 
 .perfumes {
   list-style: none;
@@ -56,7 +51,6 @@ main {
 }
 
 
-
 .perfume img {
   border-radius: 8px;
   margin-top: 16px;
@@ -66,21 +60,11 @@ main {
 }
 
 .perfume {
-  width: 220px; /* o el ancho que quieras */
+  width: 220px;
   height: auto;
   text-align: center;
   margin: 1rem;
 }
-
-/*.perfume-img {
-  width: 200px;
-  height: 200px;
-  background-color: #1a1a1a; 
-  object-fit: contain;
-  border-radius: 10px;
-  padding: 10px;
-}
-*/
 
 .perfume-card img,
 .admin-product img {
@@ -107,25 +91,20 @@ main {
   max-height: 100%;
   object-fit: contain;
   gap: 20px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); /* Opcional: sombra para mejor contraste */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); 
 }
 
-
-
-/* Al final de tu archivo styles.css o dentro de la sección de formulario */
-
 input[type="email"] {
-  background-color: var(--primary-color); /* Fondo normal */
-  color: var(--text-color); /* Color de texto */
+  background-color: var(--primary-color); 
+  color: var(--text-color); 
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 5px;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Estilo al hacer foco en el campo */
 input[type="email"]:focus {
-  background-color: #fff; /* Fondo blanco cuando el campo recibe foco */
-  border-color: #4caf50; /* Cambiar color del borde cuando está enfocado */
+  background-color: #fff; 
+  border-color: #4caf50; 
 }
 

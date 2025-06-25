@@ -8,7 +8,7 @@ const useAuth = () => {
   const { token, isAuth, userData, login, logout } = context;
 
   const hasRole = (roles) => {
-    const roleName = userData?.role || userData?.Role?.name; // Intenta ambas
+    const roleName = userData?.role || userData?.Role?.name;
     if (!roleName) return false;
 
     if (Array.isArray(roles)) {

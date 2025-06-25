@@ -12,9 +12,6 @@ const ListOfPerfumes = ({ perfumes, searchPerfume, onUpdatePerfume }) => {
   
   const { hasRole} = useAuth();
 
-
-
-
   let perfumesFiltered = perfumes.filter((perfume) => 
     perfume.titulo?.toUpperCase().includes(searchPerfume?.toUpperCase() || "") ||
     perfume.brand?.toUpperCase().includes(searchPerfume?.toUpperCase() || "")

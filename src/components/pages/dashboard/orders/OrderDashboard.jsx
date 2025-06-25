@@ -1,7 +1,7 @@
 import useAuth from "../../../../hooks/useAuth";
 import { Navigate } from "react-router-dom";
 import UserOrderList from "./UserOrderList";
-import AdminOrderList from "./AdminOrderList"; // <- este lo hacemos si no lo tenés
+import AdminOrderList from "./AdminOrderList";
 
 const OrderDashboard = () => {
   const { isAuth, hasRole } = useAuth();

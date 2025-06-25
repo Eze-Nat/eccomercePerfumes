@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { replace, useNavigate } from "react-router-dom";
 import { customFetch } from "../utils/fetch/customFetch";
-import { errorNotification, successNotification } from "../utils/notifications/Notifications";
+import {
+  errorNotification,
+  successNotification,
+} from "../utils/notifications/Notifications";
 import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
@@ -22,13 +25,11 @@ const Login = () => {
       "POST",
       credentials,
       (data) => {
-        console.log("DATA RECIBIDA:", data); // linea para eliminar
         login(data.token);
         successNotification("¡Inicio de sesión exitoso!");
-        if(hasRole(["admin","superadmin"])) {
-        navigate("/dashboard", { replace: true });
-        }
-        else {
+        if (hasRole(["admin", "superadmin"])) {
+          navigate("/dashboard", { replace: true });
+        } else {
           navigate("/", { replace: true });
         }
         setLoading(false);
@@ -46,16 +47,19 @@ const Login = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center min-vh-100 bg-dark">
-      <div className="card border-0 shadow-lg" style={{ 
-        width: '100%', 
-        maxWidth: '450px',
-        background: 'rgba(30, 30, 30, 0.9)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255, 255, 255, 0.1)'
-      }}>
+      <div
+        className="card border-0 shadow-lg"
+        style={{
+          width: "100%",
+          maxWidth: "450px",
+          background: "rgba(30, 30, 30, 0.9)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+        }}
+      >
         <div className="card-body p-4 p-md-5">
           <h2 className="text-center mb-4 text-white">Iniciar sesión</h2>
-          
+
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="inputEmail" className="form-label text-white-50">
@@ -73,7 +77,10 @@ const Login = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="inputPassword" className="form-label text-white-50">
+              <label
+                htmlFor="inputPassword"
+                className="form-label text-white-50"
+              >
                 Contraseña
               </label>
               <input
@@ -88,8 +95,8 @@ const Login = () => {
             </div>
 
             <div className="d-grid gap-2 mb-3">
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="btn btn-primary py-2"
                 disabled={loading}
               >
@@ -115,7 +122,7 @@ const Login = () => {
                 className="text-primary"
                 role="button"
                 onClick={() => navigate("/register")}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
               >
                 Registrate acá
               </span>

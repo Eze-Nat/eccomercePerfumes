@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, Form, Row, Col, Button } from 'react-bootstrap';
 import useAuth from '../../../hooks/useAuth';
 
@@ -16,9 +16,9 @@ const UserForm = ({
     active: true,
     address: ''
   },
-  onCancel = () => {},
-  onSuccess = () => {},
-  onError = () => {},
+  onCancel = () => { },
+  onSuccess = () => { },
+  onError = () => { },
   initialRoles = [{ id: 3, name: 'Usuario' }]
 }) => {
   const [validated, setValidated] = useState(false);
@@ -26,9 +26,9 @@ const UserForm = ({
   const [errors, setErrors] = useState({});
   const [showPasswordFields, setShowPasswordFields] = useState(!editingUser);
   const { hasRole } = useAuth();
-  
+  const formRef = useRef(null);
   const isAdmin = hasRole(['superadmin', 'admin']);
-  
+
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -53,8 +53,16 @@ const UserForm = ({
       active: userData.active !== undefined ? userData.active : true,
       address: userData.address || ''
     });
-    // Ocultar campos de contraseña por defecto al editar
+
     setShowPasswordFields(!editingUser);
+
+    const timer = setTimeout(() => {
+      if (formRef.current) {
+        formRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+
   }, [userData, editingUser]);
 
   useEffect(() => {
@@ -89,9 +97,9 @@ const UserForm = ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
-    
+
     if (errors[name]) {
-      const newErrors = {...errors};
+      const newErrors = { ...errors };
       delete newErrors[name];
       setErrors(newErrors);
     }
@@ -99,9 +107,8 @@ const UserForm = ({
 
   const togglePasswordFields = () => {
     setShowPasswordFields(!showPasswordFields);
-    // Limpiar errores de contraseña al ocultar los campos
     if (showPasswordFields) {
-      const newErrors = {...errors};
+      const newErrors = { ...errors };
       delete newErrors.password;
       delete newErrors.confirmPassword;
       setErrors(newErrors);
@@ -111,7 +118,7 @@ const UserForm = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-    
+
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -126,19 +133,18 @@ const UserForm = ({
       return;
     }
 
-    const finalFormData = !isAdmin 
-      ? { ...formData, role_id: '3' } 
+    const finalFormData = !isAdmin
+      ? { ...formData, role_id: '3' }
       : formData;
 
-    // Si no se muestran los campos de contraseña, no enviar esos valores
     if (!showPasswordFields) {
       delete finalFormData.password;
       delete finalFormData.confirmPassword;
     }
 
     try {
-      const successMessage = editingUser 
-        ? 'Usuario actualizado correctamente' 
+      const successMessage = editingUser
+        ? 'Usuario actualizado correctamente'
         : 'Usuario creado correctamente';
       onSuccess(successMessage, finalFormData);
     } catch (error) {
@@ -148,9 +154,9 @@ const UserForm = ({
 
   return (
     <div className="bg-dark p-4 rounded-3">
-      <Card className="mb-4 border-0 bg-dark text-light">
+      <Card ref={formRef} className="mb-4 border-0 bg-dark text-light">
         <Card.Body>
-          <h4 className="mb-4 text-light">{editingUser ? 'Editar Usuario' : 'Añadir Nuevo Usuario'}</h4>
+          <h4  className="mb-4 text-light">{editingUser ? 'Editar Usuario' : 'Añadir Nuevo Usuario'}</h4>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Row>
               <Col md={6}>
@@ -242,21 +248,21 @@ const UserForm = ({
                 </Form.Group>
               </Col>
               {!editingHimself && (
-              <Col md={6}>
-                <Form.Group className="mb-3" controlId="active">
-                  <Form.Label>Estado</Form.Label>
-                  <div className="mt-2">
-                    <Form.Check 
-                      type="switch"
-                      id="active-switch"
-                      label="Usuario activo"
-                      name="active"
-                      checked={formData.active}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </Form.Group>
-              </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3" controlId="active">
+                    <Form.Label>Estado</Form.Label>
+                    <div className="mt-2">
+                      <Form.Check
+                        type="switch"
+                        id="active-switch"
+                        label="Usuario activo"
+                        name="active"
+                        checked={formData.active}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </Form.Group>
+                </Col>
               )}
             </Row>
 
@@ -285,13 +291,13 @@ const UserForm = ({
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-              </Row>          
+              </Row>
             )}
 
             {editingUser && (
               <Row className="mb-3">
                 <Col md={12}>
-                  <Form.Check 
+                  <Form.Check
                     type="switch"
                     id="change-password-switch"
                     label="Cambiar contraseña"

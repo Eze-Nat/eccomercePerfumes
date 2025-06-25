@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Container, Button, Row, Col, Modal } from 'react-bootstrap';
 import UserForm from './UserForm';
 import UserList from './UserList';
-import { customFetch } from '../../utils/fetch/customfetch.js';
+import { customFetch } from '../../utils/fetch/customFetch.js';
 import { errorNotification, successNotification } from '../../utils/notifications/Notifications.jsx';
 
 const Users = () => {
@@ -92,7 +92,6 @@ const Users = () => {
 
 
   const handleFormSuccess = (message, newUser) => {
-    successNotification(message);
 
     if (isEditing) {
       customFetch(
@@ -100,7 +99,7 @@ const Users = () => {
         "PUT",
         newUser,
         () => {
-          successNotification('Usuario actualizado correctamente')
+          successNotification(message);
           setIdEditUser(null);
           handleShowForm();
           fetchUsers();
@@ -120,7 +119,7 @@ const Users = () => {
         "POST",
         newUser,
         () => {
-          successNotification('Usuario creado correctamente')
+          successNotification(message);
           handleShowForm();
           fetchUsers();
         },
