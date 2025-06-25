@@ -92,7 +92,7 @@ const Users = () => {
 
 
   const handleFormSuccess = (message, newUser) => {
-    successNotification(message);
+    
 
     if (isEditing) {
       customFetch(
@@ -100,7 +100,7 @@ const Users = () => {
         "PUT",
         newUser,
         () => {
-          successNotification('Usuario actualizado correctamente')
+          successNotification(message);
           setIdEditUser(null);
           handleShowForm();
           fetchUsers();
@@ -120,7 +120,7 @@ const Users = () => {
         "POST",
         newUser,
         () => {
-          successNotification('Usuario creado correctamente')
+          successNotification(message);
           handleShowForm();
           fetchUsers();
         },

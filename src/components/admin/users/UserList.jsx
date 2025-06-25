@@ -88,7 +88,7 @@ const UserList = ({ users = [], roles = [], onModal, onEdit }) => {
                           onClick={() => onModal(user)}
                           className="custom-btn-delete"
                         >
-                          Eliminar
+                          Eliminar / Desactivar
                         </Button>
                       </div>
                     </Card.Body>
