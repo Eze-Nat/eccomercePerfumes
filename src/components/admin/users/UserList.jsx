@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, InputGroup, FormControl, Badge, Alert, Button } from 'react-bootstrap';
 
 const UserList = ({ users = [], roles = [], onModal, onEdit }) => {
   const [filteredUsers, setFilteredUsers] = useState(users);
   const [searchTerm, setSearchTerm] = useState('');
 
+  useEffect(() => {
+    handleUsersFilter(searchTerm);
+  }, [users]);
+
   const handleUsersFilter = (newSearchTerm) => {
-    const filtered = users.filter(user => 
+    const filtered = users.filter(user =>
       `${user.first_name} ${user.last_name} ${user.email} ${user.address}`
         .toLowerCase()
         .includes(newSearchTerm.toLowerCase())
@@ -52,8 +56,8 @@ const UserList = ({ users = [], roles = [], onModal, onEdit }) => {
                     <Card.Body>
                       <Card.Title>
                         {user.first_name} {user.last_name}
-                        <Badge 
-                          bg={user.active ? "success" : "danger"} 
+                        <Badge
+                          bg={user.active ? "success" : "danger"}
                           className="ms-2"
                         >
                           {user.active ? "Activo" : "Inactivo"}
@@ -71,18 +75,18 @@ const UserList = ({ users = [], roles = [], onModal, onEdit }) => {
                         </div>
                       </Card.Text>
                       <div className="d-flex justify-content-end">
-                        <Button 
-                          variant="outline-light" 
-                          size="sm" 
+                        <Button
+                          variant="light"
                           onClick={() => onEdit(user)}
-                          className="me-2"
+                          className="me-2 custom-btn-edit"
                         >
                           Editar
                         </Button>
-                        <Button 
-                          variant="outline-danger" 
+                        <Button
+                          variant="danger"
                           size="sm"
                           onClick={() => onModal(user)}
+                          className="custom-btn-delete"
                         >
                           Eliminar
                         </Button>

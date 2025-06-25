@@ -24,10 +24,10 @@ const UsersProfile = () => {
   });
 
   useEffect(() => {
-    fetchUserData();
+    fetchUserCurrentData();
   }, []);
 
-  const fetchUserData = () => {
+  const fetchUserCurrentData = () => {
     customFetch(
       `/users/${dataOfUser.id}`,
       "GET",
@@ -48,17 +48,29 @@ const UsersProfile = () => {
       (error) => {
         errorNotification(
           error?.message ||
-            error?.error ||
-            "Error al traer los datos del usuario."
+          error?.error ||
+          "Error al traer los datos del usuario."
         );
       }
     );
   };
 
   const handleFormSuccess = (message, updatedData) => {
-    successNotification(message || "Perfil actualizado correctamente.");
+    customFetch(
+      `/users/${dataOfUser.id}`,
+      "PUT",
+      updatedData,
+      () => {
+        successNotification(message || "Perfil actualizado correctamente.");
+      },
+      (error) => {
+        const error_mensaje = error?.message || error?.error || "Error al actualizar el perfil.";
+        errorNotification(error_mensaje);
+        console.error("Error al actualizar el perfil:", error);
+      }
+    );
     setEditing(false);
-    fetchUserData();
+    fetchUserCurrentData();
   };
 
   const handleFormError = (message) => {
@@ -66,8 +78,8 @@ const UsersProfile = () => {
   };
 
   return (
-    <Container fluid className="mt-4">
-      <h3 className="mb-4">Información de Perfil</h3>
+    <Container fluid className="mt-4 bg-dark p-4 rounded-3 text-light">
+      <h3 className="mb-4 text-light">Información de Perfil</h3>
 
       {editing ? (
         <UserForm
@@ -81,7 +93,7 @@ const UsersProfile = () => {
       ) : (
         <Row>
           <Col md={6} className="mb-3">
-            <Card>
+            <Card className="border-0 bg-secondary text-light">
               <Card.Body>
                 <p>
                   <strong>Nombre:</strong> {formData.first_name}{" "}
@@ -91,15 +103,16 @@ const UsersProfile = () => {
                   <strong>Email:</strong> {formData.email}
                 </p>
                 <p>
-                  <strong>Teléfono:</strong> {formData.phone}
+                  <strong>Teléfono:</strong> {formData.phone || "No especificado"}
                 </p>
                 <p>
-                  <strong>Dirección:</strong> {formData.address}
+                  <strong>Dirección:</strong> {formData.address || "No especificada"}
                 </p>
                 <Button
-                  variant="primary"
+                  variant="outline-light"
                   size="sm"
                   onClick={() => setEditing(true)}
+                  className="mt-2"
                 >
                   Modificar mi Perfil
                 </Button>

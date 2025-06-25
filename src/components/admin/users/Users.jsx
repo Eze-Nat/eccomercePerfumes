@@ -102,8 +102,8 @@ const Users = () => {
         () => {
           successNotification('Usuario actualizado correctamente')
           setIdEditUser(null);
-          fetchUsers();
           handleShowForm();
+          fetchUsers();
         },
         (error) => {
           const mensaje =
@@ -121,8 +121,8 @@ const Users = () => {
         newUser,
         () => {
           successNotification('Usuario creado correctamente')
-          fetchUsers();
           handleShowForm();
+          fetchUsers();
         },
         (error) => {
           const mensaje =
@@ -152,8 +152,8 @@ const Users = () => {
         null,
         () => {
           successNotification('Usuario eliminado correctamente')
-          fetchUsers();
           setShowDeleteModal(false);
+          fetchUsers();
         },
         (error) => {
           const mensaje =
