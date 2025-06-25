@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useCart } from "../../../contexts/cart/CartContextProvider";
-import { Button, Row, Col, Badge, Card } from "react-bootstrap";
+import { Button, Row, Col, Badge, Card, Modal } from "react-bootstrap";
 import {
   successNotification,
   errorNotification,
@@ -11,16 +11,16 @@ const CartPage = () => {
   const { cart, addToCart, removeFromCart, clearCart, decreaseQuantity } = useCart();
   const [showForm, setShowForm] = useState(false);
   const [orderSuccessful, setOrderSuccessful] = useState(false);
-
+  const [showClearModal, setShowClearModal] = useState(false);
+  
   const total = cart.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
 
   const increaseQuantity = (product) => addToCart(product);
 
   const handleClearCart = () => {
-    if (window.confirm("¿Seguro que quieres vaciar el carrito?")) {
-      clearCart();
-      successNotification("Carrito vacío!");
-    }
+    clearCart();
+    successNotification("Carrito vacío!");
+    setShowClearModal(false);
   };
 
   const handleConfirmCheckout = () => {
@@ -113,8 +113,8 @@ const CartPage = () => {
                 </h4>
                 <div className="d-flex justify-content-end gap-2 mt-3">
                   <Button
-                    variant="outline-secondary"
-                    onClick={handleClearCart}
+                    variant="outline-danger"
+                    onClick={() => setShowClearModal(true)}
                   >
                     Vaciar carrito
                   </Button>
@@ -128,6 +128,27 @@ const CartPage = () => {
               </div>
             </Col>
           </Row>
+
+          {/* Modal de confirmación para vaciar carrito */}
+          <Modal show={showClearModal} onHide={() => setShowClearModal(false)} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Confirmar acción</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              ¿Estás seguro que deseas vaciar completamente el carrito?
+              <div className="mt-3 text-danger">
+                Esta acción no se puede deshacer.
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowClearModal(false)}>
+                Cancelar
+              </Button>
+              <Button variant="danger" onClick={handleClearCart}>
+                Vaciar Carrito
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </>
       )}
     </div>
