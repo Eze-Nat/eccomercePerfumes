@@ -14,7 +14,7 @@ const DashboardAdmin = () => {
 
   return (
     <div className="container mt-5">
-      <h1>Panel de Administración admin</h1>
+      <h1>Panel de Usuario</h1>
       <p>Bienvenido{userData?.first_name ? `, ${userData.first_name}` : ""}</p>
 
       <div className="mb-3">
