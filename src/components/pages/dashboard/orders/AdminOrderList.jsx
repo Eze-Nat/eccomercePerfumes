@@ -54,6 +54,7 @@ const AdminOrderList = () => {
   const closeModal = () => {
     setSelectedOrder(null);
     setShowModal(false);
+    fetchAllOrders();
   };
 
   const confirmDeleteOrder = (order) => {
