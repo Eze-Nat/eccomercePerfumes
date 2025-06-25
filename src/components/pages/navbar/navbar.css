@@ -3,13 +3,10 @@
   background-color: var(--color-bg);
   color: var(--color-text);
   position: fixed;
-  /* Cambiado de absolute a fixed */
   top: 0;
   left: 0;
   z-index: 1000;
-  /* Asegura que esté por encima del contenido */
   height: 60px;
-  /* Altura fija para consistencia */
 }
 
 .navbar-wrapper {
@@ -23,6 +20,5 @@
 
 .active-link {
   color: #0d6efd !important;
-  /* Color azul de Bootstrap para active */
   text-decoration: underline;
 }

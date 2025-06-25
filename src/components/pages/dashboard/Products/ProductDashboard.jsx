@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 import ProductListItem from "./ProductListItems";
 import ProductForm from "./ProductForm";
-import { customFetch } from "../../../utils/fetch/customfetch";
+import { customFetch } from "../../../utils/fetch/customFetch";
 import { mapBackendToFrontend } from "../../../utils/mapperDB/mappers";
 import useAuth from "../../../../hooks/useAuth";
 
@@ -70,11 +70,10 @@ const ProductsDashboard = () => {
           key={perfume.id}
           perfume={perfume}
           onEdit={handleEdit}
-          onDelete={() => confirmDelete(perfume)} // Cambiado para usar el modal
+          onDelete={() => confirmDelete(perfume)} 
         />
       ))}
 
-      {/* Modal para formulario de producto */}
       <Modal show={showForm} onHide={() => setShowForm(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{editProduct ? "Editar Producto" : "Nuevo Producto"}</Modal.Title>
@@ -87,7 +86,6 @@ const ProductsDashboard = () => {
         </Modal.Body>
       </Modal>
 
-      {/* Modal de confirmación para eliminar */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirmar eliminación</Modal.Title>

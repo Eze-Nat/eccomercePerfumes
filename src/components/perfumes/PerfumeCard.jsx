@@ -14,8 +14,6 @@ const PerfumeCard = ({ initialPerfume = {}, isAdmin = false }) => {
   
   const { addToCart } = useCart();
 
-  
-
   useEffect(() => {
     setCurrentPerfume(mapBackendToFrontend(perfume));
   }, [perfume]);
@@ -32,8 +30,6 @@ const PerfumeCard = ({ initialPerfume = {}, isAdmin = false }) => {
     }))  
     successNotification("Producto agregado al carrito");
   };
-
-
 
   if (!isAdmin && !perfume.active) return null;
 
@@ -82,7 +78,6 @@ const PerfumeCard = ({ initialPerfume = {}, isAdmin = false }) => {
         {perfume.stock <= 0 ? "Sin stock" : "Agregar al carrito"}
       </Button>
 
-      {/* Modal para stock agotado */}
       <Modal show={showStockModal} onHide={() => setShowStockModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Producto no disponible</Modal.Title>

@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { customFetch } from "../utils/fetch/customfetch";
+import { customFetch } from "../utils/fetch/customFetch";
 import {
   errorNotification,
   successNotification,

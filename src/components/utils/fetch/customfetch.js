@@ -8,12 +8,10 @@ export const customFetch = async (
 ) => {
   
   try {
-   // 1. Construcción correcta de la URL
     const baseUrl = import.meta.env.VITE_BASE_SERVER_URL || "http://localhost:3000";
     const fullUrl = `${baseUrl}/api${url.startsWith("/") ? "" : "/"}${url}`;
 
     const token = localStorage.getItem("token");
-
 
     const headers = {
       "Content-Type": "application/json",
@@ -44,6 +42,6 @@ if (!response.ok) {
   } catch (error) {
     console.error("Error en customFetch:", error.message);
     onError(error);
-    throw error; // Re-lanzar el error para que pueda ser manejado por el llamador
+    throw error;
   }
 };
