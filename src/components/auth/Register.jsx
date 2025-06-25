@@ -67,8 +67,9 @@ const Register = () => {
       "POST",
       userData,
       (data) => {
+        console.log("data", data);
         successNotification("Registro exitoso");
-        login(data);
+        login(data.token);
         navigate("/");
       },
       (error) => {
