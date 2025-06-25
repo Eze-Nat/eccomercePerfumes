@@ -19,6 +19,7 @@ const ProductListItem = ({ perfume, onEdit, onDelete }) => {
         <strong>{perfume.titulo}</strong>
         <div className="text-white">{perfume.brand}</div>
         <div className="text-white">${perfume.precio}</div>
+        <div className="text-white">Stock: {perfume.stock}</div>
       </Col>
 
       <Col xs={2}>

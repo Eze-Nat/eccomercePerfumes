@@ -13,8 +13,7 @@ const ListOfPerfumes = ({ perfumes, searchPerfume, onUpdatePerfume }) => {
   const { hasRole} = useAuth();
 
 
-  
-  console.log("¿Es admin o superadmin?", hasRole(["admin", "superadmin"]));
+
 
   let perfumesFiltered = perfumes.filter((perfume) => 
     perfume.titulo?.toUpperCase().includes(searchPerfume?.toUpperCase() || "") ||
@@ -33,7 +32,7 @@ const ListOfPerfumes = ({ perfumes, searchPerfume, onUpdatePerfume }) => {
         {perfumesFiltered.map((perfume) => (
           <Col className="perfume" key={perfume.id}>
             <PerfumeCard
-              perfume={perfume}
+              initialPerfume={perfume}
               isAdmin={hasRole(["admin", "superadmin"])}
               onUpdateProduct={onUpdatePerfume}
             />
