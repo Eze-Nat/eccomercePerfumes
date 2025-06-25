@@ -60,7 +60,18 @@ const UsersProfile = () => {
       `/users/${dataOfUser.id}`,
       "PUT",
       updatedData,
-      () => {
+      (data) => {
+        setFormData({
+          first_name: data.first_name || "",
+          last_name: data.last_name || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          role_id: data.role_id || "",
+          password: "",
+          confirmPassword: "",
+          active: data.active !== undefined ? data.active : true,
+          address: data.address || "",
+        });
         successNotification(message || "Perfil actualizado correctamente.");
       },
       (error) => {
@@ -70,7 +81,6 @@ const UsersProfile = () => {
       }
     );
     setEditing(false);
-    fetchUserCurrentData();
   };
 
   const handleFormError = (message) => {
