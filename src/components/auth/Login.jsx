@@ -1,87 +1,136 @@
 import { useState } from "react";
-import Register from "./Register";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
+import { customFetch } from "../utils/fetch/customFetch";
+import {
+  errorNotification,
+  successNotification,
+} from "../utils/notifications/Notifications";
+import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login, hasRole } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("sesion iniciada");
-    navigate("/");
-  };
+    setLoading(true);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+    const credentials = { email, password };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleButtonCancel = () => {
-    navigate("/");
-  };
-
-  const handleButtonToRegister = () => {
-    navigate("/Register");
+    customFetch(
+      "/auth/login",
+      "POST",
+      credentials,
+      (data) => {
+        login(data.token);
+        successNotification("¡Inicio de sesión exitoso!");
+        if (hasRole(["admin", "superadmin"])) {
+          navigate("/dashboard", { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
+        setLoading(false);
+      },
+      (error) => {
+        const mensaje =
+          error?.message || error?.error || "Error al iniciar sesión.";
+        errorNotification(mensaje);
+        console.error("Error al iniciar sesión:", error);
+        setLoading(false);
+      },
+      true
+    );
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <h2>Iniciar sesión</h2>
-        <div className="mb-3">
-          <label htmlFor="inputEmail" className="form-label">
-            Correo electronico
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="inputEmail"
-            value={email}
-            aria-describedby="emailHelp"
-            onChange={handleEmailChange}
-            required
-          />
-          <div id="emailHelp" className="form-text">
-            Nunca compartiremos tu correo electrónico con nadie más.
+    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-dark">
+      <div
+        className="card border-0 shadow-lg"
+        style={{
+          width: "100%",
+          maxWidth: "450px",
+          background: "rgba(30, 30, 30, 0.9)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+        }}
+      >
+        <div className="card-body p-4 p-md-5">
+          <h2 className="text-center mb-4 text-white">Iniciar sesión</h2>
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label htmlFor="inputEmail" className="form-label text-white-50">
+                Correo electrónico
+              </label>
+              <input
+                type="email"
+                className="form-control bg-dark text-white border-secondary"
+                id="inputEmail"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="inputPassword"
+                className="form-label text-white-50"
+              >
+                Contraseña
+              </label>
+              <input
+                type="password"
+                className="form-control bg-dark text-white border-secondary"
+                id="inputPassword"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="d-grid gap-2 mb-3">
+              <button
+                type="submit"
+                className="btn btn-primary py-2"
+                disabled={loading}
+              >
+                {loading ? "Ingresando..." : "Iniciar sesión"}
+              </button>
+            </div>
+
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => navigate("/")}
+                className="btn btn-link text-white-50"
+              >
+                Volver al inicio
+              </button>
+            </div>
+          </form>
+
+          <div className="text-center mt-4 pt-3 border-top border-secondary">
+            <p className="text-white-50 mb-0">
+              ¿No tenés cuenta?{" "}
+              <span
+                className="text-primary"
+                role="button"
+                onClick={() => navigate("/register")}
+                style={{ cursor: "pointer" }}
+              >
+                Registrate acá
+              </span>
+            </p>
           </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="inputPassword" className="form-label">
-            Contraseña
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="inputPassword"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Iniciar sesión
-        </button>
-        <button onClick={handleButtonCancel} className="btn btn-primary">
-          Cerrar
-        </button>
-      </form>
-      <p className="mt-3">
-        ¿No tenés cuenta?{" "}
-        <span
-          className="text-primary"
-          role="button"
-          onClick={handleButtonToRegister}
-        >
-          Registrate acá
-        </span>
-      </p>
-    </>
+      </div>
+    </div>
   );
 };
 

@@ -1,0 +1,12 @@
+.admin-controls {
+  transition: all 0.3s ease;
+  border: 1px solid #dee2e6;
+}
+
+.admin-controls:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+InputGroup {
+  max-width: 300px;
+}
