@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Perfumes } from "../perfumes/Perfumes.jsx";
 import Navbar from "./navbar/Navbar.jsx";
 import { customFetch } from "../utils/fetch/customfetch.js";
-import productsData from "../../../products/productList.json";
+
 
 const Home = () => {
   const [perfumes, setPerfumes] = useState([]);
@@ -11,23 +11,30 @@ const Home = () => {
   const [error, setError] = useState(null);
 
 useEffect(() => {
-  try {
-    const mappedProducts = productsData.Search.map((item) => ({
-      id: item.id,
-      titulo: item.titulo,
-      descripcion: item.descripcion,
-      imagen: item.imagen,
-      precio: item.precio || "Consultar",
-      stock: item.stock || "Disponible",
-    }));
+  const fetchPerfumes = async () => {
+    try {
+      const response = await fetch("/products/productList.json");
+      const json = await response.json();
 
-    setPerfumes(mappedProducts);
-  } catch (err) {
-    console.error("Error cargando productos:", err);
-    setError("No se pudieron cargar los productos");
-  } finally {
-    setLoading(false);
-  }
+      const mappedProducts = json.Search.map((item) => ({
+        id: item.id,
+        titulo: item.titulo,
+        descripcion: item.descripcion,
+        imagen: item.imagen,
+        precio: item.precio,
+        stock: item.stock,
+      }));
+
+      setPerfumes(mappedProducts);
+    } catch (err) {
+      console.error("Error fetching products from API:", err);
+      setError("No se pudieron cargar los productos");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchPerfumes();
 }, []);
 
 
