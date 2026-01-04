@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Perfumes } from "../perfumes/Perfumes.jsx";
 import Navbar from "./navbar/Navbar.jsx";
 import { customFetch } from "../utils/fetch/customfetch.js";
-import productsData from "../../productList.json";
+import productsData from "../../../products/productList.json";
 
 const Home = () => {
   const [perfumes, setPerfumes] = useState([]);
