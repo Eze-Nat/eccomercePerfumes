@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
-import { customFetch } from "../../../utils/fetch/customFetch";
+import { customFetch } from "../../../utils/fetch/customfetch";
 import { mapFrontendToBackend } from "../../../utils/mapperDB/mappers";
 
 const ProductForm = ({ initialData = {}, onSuccess }) => {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, Button, Row, Col, Card } from "react-bootstrap";
 import UserForm from "../admin/users/UserForm.jsx";
-import { customFetch } from "../utils/fetch/customFetch.js";
+import { customFetch } from "../utils/fetch/customfetch.js";
 import {
   errorNotification,
   successNotification,

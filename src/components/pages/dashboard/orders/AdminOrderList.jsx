@@ -8,7 +8,7 @@ import {
   Col,
   Modal,
 } from "react-bootstrap";
-import { customFetch } from "../../../utils/fetch/customFetch";
+import { customFetch } from "../../../utils/fetch/customfetch";
 import {
   errorNotification,
   successNotification,
