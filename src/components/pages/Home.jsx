@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Perfumes } from "../perfumes/perfumes.jsx";
+import { Perfumes } from "../perfumes/Perfumes.jsx";
 import Navbar from "./navbar/Navbar.jsx";
 import { customFetch } from "../utils/fetch/customfetch.js";
 
