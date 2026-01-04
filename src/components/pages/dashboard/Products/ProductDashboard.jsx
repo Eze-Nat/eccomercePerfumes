@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 import ProductListItem from "./ProductListItems";
 import ProductForm from "./ProductForm";
-import { customFetch } from "../../../utils/fetch/customFetch";
+import { customFetch } from "../../../utils/fetch/customfetch";
 import { mapBackendToFrontend } from "../../../utils/mapperDB/mappers";
 import useAuth from "../../../../hooks/useAuth";
 

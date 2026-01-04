@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Container, Button, Row, Col, Modal } from 'react-bootstrap';
 import UserForm from './UserForm';
 import UserList from './UserList';
-import { customFetch } from '../../utils/fetch/customFetch.js';
+import { customFetch } from '../../utils/fetch/customfetch.js';
 import { errorNotification, successNotification } from '../../utils/notifications/Notifications.jsx';
 
 const Users = () => {

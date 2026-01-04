@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Spinner, Button, Card, Container, Row, Col } from "react-bootstrap";
-import { customFetch } from "../../../utils/fetch/customFetch";
+import { customFetch } from "../../../utils/fetch/customfetch";
 import { errorNotification } from "../../../utils/notifications/Notifications";
 import OrderDetailModal from "./orders.modal/UserOrderDetailModal";
 

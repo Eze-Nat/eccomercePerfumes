@@ -9,7 +9,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { customFetch } from "../../../../utils/fetch/customFetch";
+import { customFetch } from "../../../../utils/fetch/customfetch";
 import {
   successNotification,
   errorNotification,
