@@ -5,6 +5,8 @@ import { useCart } from "../../contexts/cart/CartContextProvider";
 import { successNotification } from "../utils/notifications/Notifications";
 import Loader from "../utils/spinner/Loader";
 import { mapBackendToFrontend } from "../utils/mapperDB/mappers";
+import { formatPrice } from "../utils/formatPrice/formatPrice";
+import { getImageUrl } from "../utils/getImages/getImageUrl";
 
 const PerfumeCard = ({ initialPerfume = {}, isAdmin = false }) => {
   
@@ -56,14 +58,14 @@ const PerfumeCard = ({ initialPerfume = {}, isAdmin = false }) => {
 
       <div className="perfume-image-container">
         <Loader
-          src={perfume.imagen?.startsWith("http") ? perfume.imagen : `http://localhost:3000${perfume.imagen}`}
+          src={getImageUrl(perfume.imagen)}
           alt={perfume.titulo}
           placeholder="/placeholder-image.png" 
         />
       </div>
 
       <div className="m-2">
-        ${perfume.precio?.toFixed(2) || "Consultar precio"}
+        {perfume.precio ? `$${formatPrice(perfume.precio)}` : "Consultar precio"}
         {perfume.stock > 0 && (
           <small className="d-block text-white">{perfume.stock} disponibles</small>
         )}

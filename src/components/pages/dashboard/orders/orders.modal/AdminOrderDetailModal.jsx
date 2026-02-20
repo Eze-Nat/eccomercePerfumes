@@ -14,6 +14,7 @@ import {
   successNotification,
   errorNotification,
 } from "../../../../utils/notifications/Notifications";
+import { formatPrice } from "../../../../utils/formatPrice/formatPrice";
 
 const AdminOrderDetailModal = ({ show, onHide, order, onUpdate }) => {
   const [switchStatus, setSwitchStatus] = useState("");
@@ -122,10 +123,10 @@ const AdminOrderDetailModal = ({ show, onHide, order, onUpdate }) => {
                   <div>
                     <strong>{Product.name}</strong>
                     <div className="text-muted">
-                      {quantity} x ${unitPrice.toFixed(2)}
+                      {quantity} x ${formatPrice(unitPrice)}
                     </div>
                   </div>
-                  <div>${(unitPrice * quantity).toFixed(2)}</div>
+                  <div>${formatPrice(unitPrice * quantity)}</div>
                 </div>
               </ListGroup.Item>
             ))
@@ -134,7 +135,7 @@ const AdminOrderDetailModal = ({ show, onHide, order, onUpdate }) => {
           )}
         </ListGroup>
 
-        <h5 className="mt-3 text-end">Total: ${order.total.toFixed(2)}</h5>
+        <h5 className="mt-3 text-end">Total: ${formatPrice(order.total)}</h5>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide} disabled={saving}>

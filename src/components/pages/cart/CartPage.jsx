@@ -6,6 +6,8 @@ import {
   errorNotification,
 } from "../../utils/notifications/Notifications";
 import CheckoutForm from "./CheckoutForm";
+import { formatPrice } from "../../utils/formatPrice/formatPrice";
+
 
 const CartPage = () => {
   const { cart, addToCart, removeFromCart, clearCart, decreaseQuantity } = useCart();
@@ -67,7 +69,7 @@ const CartPage = () => {
                 <Col xs={9} md={4}>
                   <h5 className="mb-1">{item.nombre}</h5>
                   <p className="mb-1 text-white">{item.descripcion}</p>
-                  <p className="mb-0">${item.precio.toFixed(2)}</p>
+                  <p className="mb-0">${formatPrice(item.precio)}</p>
                 </Col>
                 <Col xs={12} md={3} className="mt-2 mt-md-0">
                   <div className="d-flex align-items-center">
@@ -109,7 +111,7 @@ const CartPage = () => {
             <Col md={{ span: 6, offset: 6 }}>
               <div className="p-3 rounded">
                 <h4 className="text-end">
-                  Total: <strong>${total.toFixed(2)}</strong>
+                  Total: <strong>${formatPrice(total)}</strong>
                 </h4>
                 <div className="d-flex justify-content-end gap-2 mt-3">
                   <Button

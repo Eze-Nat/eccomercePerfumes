@@ -7,6 +7,7 @@ import {
 import { customFetch } from "../../utils/fetch/customfetch";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { formatPrice } from "../../utils/formatPrice/formatPrice"
 
 const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
   const { userData } = useAuth();
@@ -70,7 +71,7 @@ const CheckoutForm = ({ cart, total, onConfirm, onCancel }) => {
         <strong>Dirección:</strong> {userData?.address}
       </p>
       <p>
-        <strong>Total:</strong> ${total.toFixed(2)}
+        <strong>Total:</strong> ${formatPrice(total)}
       </p>
 
       <Form.Group className="mb-3" controlId="paymentMethod">
