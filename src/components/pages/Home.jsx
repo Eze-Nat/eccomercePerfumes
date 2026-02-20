@@ -13,19 +13,21 @@ const Home = () => {
 useEffect(() => {
   const fetchPerfumes = async () => {
     try {
-      const response = await fetch("/products/productList.json");
-      const json = await response.json();
+const data = await customFetch("/products");
 
-      const mappedProducts = json.Search.map((item) => ({
-        id: item.id,
-        titulo: item.titulo,
-        descripcion: item.descripcion,
-        imagen: item.imagen,
-        precio: item.precio,
-        stock: item.stock,
-      }));
+const mappedProducts = data.map((item) => ({
+  id: item.id,
+  titulo: item.name,
+  descripcion: item.description,
+  imagen: item.mainImage,
+  precio: item.price,
+  stock: item.stock,
+  brand: item.brand,
+  category: item.category,
+  active: item.active,
+}));
 
-      setPerfumes(mappedProducts);
+setPerfumes(mappedProducts);
     } catch (err) {
       console.error("Error fetching products from API:", err);
       setError("No se pudieron cargar los productos");
