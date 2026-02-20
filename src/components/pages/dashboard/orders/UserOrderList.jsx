@@ -3,6 +3,8 @@ import { Spinner, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { customFetch } from "../../../utils/fetch/customFetch";
 import { errorNotification } from "../../../utils/notifications/Notifications";
 import OrderDetailModal from "./orders.modal/UserOrderDetailModal";
+import { formatPrice } from "../../../utils/formatPrice/formatPrice";
+
 
 const UserOrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -75,7 +77,7 @@ const UserOrderList = () => {
                     <br />
                     Estado: <strong>{order.status}</strong>
                     <br />
-                    Total: <strong>${order.total.toFixed(2)}</strong>
+                    Total: <strong>${formatPrice(order.total)}</strong>
                   </Card.Text>
                   <Button
                     variant="primary"

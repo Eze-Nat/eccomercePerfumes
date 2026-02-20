@@ -14,6 +14,7 @@ import {
   successNotification,
 } from "../../../utils/notifications/Notifications";
 import AdminOrderDetailModal from "./orders.modal/AdminOrderDetailModal";
+import { formatPrice } from "../../../utils/formatPrice/formatPrice";
 
 const AdminOrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -111,7 +112,7 @@ const AdminOrderList = () => {
                 <Card.Text>
                   Fecha: {new Date(order.orderDate).toLocaleDateString()} <br />
                   Estado: <strong>{order.status}</strong> <br />
-                  Total: <strong>${order.total.toFixed(2)}</strong>
+                  Total: <strong>${formatPrice(order.total)}</strong>
                 </Card.Text>
                 <Button
                   variant="info"

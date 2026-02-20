@@ -1,5 +1,6 @@
 import { useCart } from "../contexts/CartContextProvider";
 import { Button } from "react-bootstrap";
+import { formatPrice } from "../utils/formatPrice/formatPrice"
 
 const Cart = () => {
   const { cart, removeFromCart, clearCart } = useCart();
@@ -18,7 +19,7 @@ const Cart = () => {
                 <h4>{item.nombre}</h4>
                 <p>{item.descripcion}</p>
                 <p>
-                  <strong>${item.precio.toFixed(2)}</strong>
+                  <strong>${formatPrice(item.precio)}</strong>
                 </p>
                 <Button
                   variant="outline-danger"

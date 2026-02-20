@@ -1,15 +1,12 @@
 import { Badge, Button, Row, Col } from "react-bootstrap";
+import { getImageUrl } from "../../../utils/getImages/getImageUrl";
 
 const ProductListItem = ({ perfume, onEdit, onDelete }) => {
   return (
     <Row className="align-items-center border p-2 mb-2 rounded">
       <Col xs={2}>
         <img
-          src={
-            perfume.imagen?.startsWith("http")
-              ? perfume.imagen
-              : `http://localhost:3000${perfume.imagen}`
-          }
+          src={getImageUrl(perfume.imagen)}
           alt={perfume.titulo}
           style={{ width: "100%", maxHeight: "80px", objectFit: "cover" }}
         />
