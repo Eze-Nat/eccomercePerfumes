@@ -9,7 +9,7 @@ import {
 import useAuth from "../../hooks/useAuth.jsx";
 
 const UsersProfile = () => {
-  const { userData: dataOfUser } = useAuth();
+  const { userData: dataOfUser, setUserData } = useAuth();
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
     first_name: "",
@@ -55,33 +55,43 @@ const UsersProfile = () => {
     );
   };
 
-  const handleFormSuccess = (message, updatedData) => {
-    customFetch(
-      `/users/${dataOfUser.id}`,
-      "PUT",
-      updatedData,
-      (data) => {
-        setFormData({
-          first_name: data.first_name || "",
-          last_name: data.last_name || "",
-          email: data.email || "",
-          phone: data.phone || "",
-          role_id: data.role_id || "",
-          password: "",
-          confirmPassword: "",
-          active: data.active !== undefined ? data.active : true,
-          address: data.address || "",
-        });
-        successNotification(message || "Perfil actualizado correctamente.");
-      },
-      (error) => {
-        const error_mensaje = error?.message || error?.error || "Error al actualizar el perfil.";
-        errorNotification(error_mensaje);
-        console.error("Error al actualizar el perfil:", error);
-      }
-    );
-    setEditing(false);
-  };
+const handleFormSuccess = (message, updatedData) => {
+  customFetch(
+    `/users/${dataOfUser.id}`,
+    "PUT",
+    updatedData,
+    (data) => {
+      const updatedUser = {
+        ...dataOfUser,
+        ...data,
+      };
+
+      setFormData({
+        first_name: data.first_name || "",
+        last_name: data.last_name || "",
+        email: data.email || "",
+        phone: data.phone || "",
+        role_id: data.role_id || "",
+        password: "",
+        confirmPassword: "",
+        active: data.active !== undefined ? data.active : true,
+        address: data.address || "",
+      });
+
+      setUserData(updatedUser);
+
+      successNotification(message || "Perfil actualizado correctamente.");
+    },
+    (error) => {
+      const error_mensaje =
+        error?.message || error?.error || "Error al actualizar el perfil.";
+      errorNotification(error_mensaje);
+      console.error("Error al actualizar el perfil:", error);
+    }
+  );
+
+  setEditing(false);
+};
 
   const handleFormError = (message) => {
     errorNotification(message);

@@ -76,6 +76,7 @@ const AuthProvider = ({ children }) => {
         token,
         isAuth,
         userData,
+        setUserData,
         role: userData?.role || null,
         login,
         logout,

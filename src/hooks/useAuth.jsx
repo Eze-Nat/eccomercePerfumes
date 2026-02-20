@@ -5,7 +5,7 @@ import AuthContext from "../contexts/auth/Auth.Context";
 const useAuth = () => {
   const context = useContext(AuthContext);
 
-  const { token, isAuth, userData, login, logout } = context;
+  const { token, isAuth, userData,setUserData, login, logout } = context;
 
   const hasRole = (roles) => {
     const roleName = userData?.role || userData?.Role?.name;
@@ -34,6 +34,7 @@ const useAuth = () => {
   return {
     isAuth,
     userData,
+    setUserData,
     role: userData?.role || null,
     hasRole,
     isTokenExpired,
