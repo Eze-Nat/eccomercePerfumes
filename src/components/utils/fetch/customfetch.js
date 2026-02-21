@@ -40,8 +40,8 @@ if (!response.ok) {
     return data;
 
   } catch (error) {
-    console.error("Error en customFetch:", error.message);
-    onError(error);
-    throw error;
-  }
+  console.error("Error en customFetch:", error.message);
+  onError(error);
+  return null; // ❗️ NO throw error
+}
 };
