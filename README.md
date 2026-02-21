@@ -12,10 +12,12 @@ Este proyecto forma parte de una solución fullstack que simula un ecommerce rea
 
 ---
 
-## 🌐 Demo
+## 🌐 Live Demo
 
-👉 https://eccomerce-perfumes.netlify.app/
+🔗 **Frontend:** https://eccomerce-perfumes.netlify.app/  
+🔗 **API:** https://ecommerceperfumesapi.onrender.com  
 
+⚠️ Nota: Si la API está en estado "sleep" (Render free tier), puede tardar unos segundos en responder la primera vez.
 ---
 
 ## 🚀 Tecnologías utilizadas
@@ -29,6 +31,37 @@ Este proyecto forma parte de una solución fullstack que simula un ecommerce rea
 * Netlify (deploy)
 
 ---
+
+## 🏗️ Arquitectura
+
+- Frontend SPA desarrollado en React
+- API REST propia desplegada en Render
+- Autenticación JWT
+- Comunicación vía Fetch API
+- Protección de rutas basada en roles
+
+---
+
+## ⚙️ Características técnicas
+
+- Manejo global de estado con Context API
+- Persistencia de sesión con JWT
+- Validación de token y expiración
+- Manejo centralizado de errores HTTP
+- Protección de rutas privadas
+- Manejo de roles (admin / user)
+- Configuración de variables de entorno por ambiente
+- Deploy automatizado con Netlify
+
+---
+
+## 🧪 Cómo probar la aplicación
+
+1. Registrarse como nuevo usuario
+2. Iniciar sesión
+3. Agregar productos al carrito
+4. En carrito finalizar compra o seguir agregando
+5. En panel de usuario podemos ver las ordenes que hicimos
 
 ## 🔗 Backend
 
