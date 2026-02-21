@@ -24,16 +24,24 @@ const Login = () => {
       "/auth/login",
       "POST",
       credentials,
-      (data) => {
-        login(data.token);
-        successNotification("¡Inicio de sesión exitoso!");
-        if (hasRole(["admin", "superadmin"])) {
-          navigate("/dashboard", { replace: true });
-        } else {
-          navigate("/", { replace: true });
-        }
-        setLoading(false);
-      },
+(data) => {
+  const decoded = login(data.token);
+
+  if (!decoded) {
+    errorNotification("Error procesando sesión");
+    return;
+  }
+
+  successNotification("¡Inicio de sesión exitoso!");
+
+  if (decoded.role === "admin" || decoded.role === "superadmin") {
+    navigate("/dashboard", { replace: true });
+  } else {
+    navigate("/", { replace: true });
+  }
+
+  setLoading(false);
+},
       (error) => {
         const mensaje =
           error?.message || error?.error || "Error al iniciar sesión.";

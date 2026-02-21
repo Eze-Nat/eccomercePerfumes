@@ -25,21 +25,23 @@ const AuthProvider = ({ children }) => {
     return null;
   });
 
-  const login = (newToken) => {
-    try {
-      const decoded = jwtDecode(newToken);
-      saveToken(newToken);
-      setToken(newToken);
-      setIsAuth(true);
-      setUserData(decoded);
-    } catch (err) {
-      console.error("Token inválido al hacer login:", err);
-      removeToken();
-      setToken(null);
-      setIsAuth(false);
-      setUserData(null);
-    }
-  };
+const login = (newToken) => {
+  try {
+    const decoded = jwtDecode(newToken);
+    saveToken(newToken);
+    setToken(newToken);
+    setIsAuth(true);
+    setUserData(decoded);
+    return decoded; // 🔥 IMPORTANTE
+  } catch (err) {
+    console.error("Token inválido al hacer login:", err);
+    removeToken();
+    setToken(null);
+    setIsAuth(false);
+    setUserData(null);
+    return null;
+  }
+};
 
   const logout = (redirectUrl = "/login") => {
     logoutHelper(redirectUrl);
