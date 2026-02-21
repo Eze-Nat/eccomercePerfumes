@@ -41,29 +41,22 @@ const UserForm = ({
     address: ''
   });
 
-  useEffect(() => {
-    setFormData({
-      first_name: userData.first_name || '',
-      last_name: userData.last_name || '',
-      email: userData.email || '',
-      phone: userData.phone || '',
-      role_id: userData.role_id || (roles.length > 0 ? roles[0].id : ''),
-      password: '',
-      confirmPassword: '',
-      active: userData.active !== undefined ? userData.active : true,
-      address: userData.address || ''
-    });
+useEffect(() => {
+  setFormData({
+    first_name: userData?.first_name || '',
+    last_name: userData?.last_name || '',
+    email: userData?.email || '',
+    phone: userData?.phone || '',
+    role_id: userData?.role_id || (roles.length > 0 ? roles[0].id : ''),
+    password: '',
+    confirmPassword: '',
+    active: userData?.active ?? true,
+    address: userData?.address || ''
+  });
 
-    setShowPasswordFields(!editingUser);
+  setShowPasswordFields(!editingUser);
 
-    const timer = setTimeout(() => {
-      if (formRef.current) {
-        formRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 500);
-    return () => clearTimeout(timer);
-
-  }, [userData, editingUser]);
+}, [userData, editingUser]);
 
   useEffect(() => {
     if (editingUser && hasRole("admin")) {
