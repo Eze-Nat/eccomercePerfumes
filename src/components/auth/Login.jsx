@@ -49,13 +49,11 @@ const handleSubmit = async (e) => {
 
       setLoading(false);
     },
-    (error) => {
-      const mensaje =
-        error?.message || error?.error || "Error al iniciar sesión.";
-      errorNotification(mensaje);
-      setLoading(false);
-    },
-    true
+(error) => {
+  errorNotification(error?.message || "Error al iniciar sesión.");
+  setLoading(false);
+}
+    
   );
 };
 

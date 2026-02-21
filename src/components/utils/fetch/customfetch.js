@@ -28,21 +28,25 @@ export const customFetch = async (
           : undefined,
     });
 
-    // 🔥 Manejo correcto de error HTTP
-    if (!response.ok) {
-      let errorMessage = `Error ${response.status}`;
+if (!response.ok) {
+  if (response.status === 401) {
+    onError(new Error("Credenciales incorrectas."));
+    return null;
+  }
 
-      try {
-        const errorData = await response.json();
-        errorMessage =
-          errorData?.error || errorData?.message || errorMessage;
-      } catch {
-        // Si no viene JSON, ignoramos
-      }
+  if (response.status === 403) {
+    onError(new Error("No tienes permisos para esta acción."));
+    return null;
+  }
 
-      onError(new Error(errorMessage));
-      return null;
-    }
+  if (response.status >= 500) {
+    onError(new Error("Error del servidor. Intenta más tarde."));
+    return null;
+  }
+
+  onError(new Error("Error en la solicitud."));
+  return null;
+}
 
     const data = await response.json();
     onSuccess(data);
