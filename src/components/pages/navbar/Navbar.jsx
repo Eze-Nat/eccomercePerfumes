@@ -4,6 +4,8 @@ import { useCart } from "../../../contexts//cart/CartContextProvider";
 import useAuth from "../../../hooks/useAuth";
 import "./navbar.css";
 
+
+
 const Navbar = ({ onSearchPerfume }) => {
   const { cart } = useCart();
   const [searchPerfume, setSearchPerfume] = useState("");
@@ -13,6 +15,8 @@ const Navbar = ({ onSearchPerfume }) => {
 
   const showSearchBar = ["/", "/search"].includes(location.pathname);
 
+  
+
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -20,6 +24,7 @@ const Navbar = ({ onSearchPerfume }) => {
       }
     };
   }, []);
+
 
   const handleOnChange = (event) => {
     const newSearchPerfume = event.target.value;

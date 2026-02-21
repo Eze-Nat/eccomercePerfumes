@@ -1,3 +1,5 @@
+import { jwtDecode } from "jwt-decode";
+
 const TOKEN_KEY = "token";
 
 export const saveToken = (token) => {
@@ -14,7 +16,16 @@ export const removeToken = () => {
 
 export const isAuthenticated = () => {
   const token = getToken();
-  return !!token;
+  if (!token) return false;
+
+  try {
+    const decoded = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    return decoded.exp > currentTime;
+  } catch {
+    removeToken();
+    return false;
+  }
 };
 
 export const logout = (redirectUrl = "/login") => {
