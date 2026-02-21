@@ -6,9 +6,10 @@ export const customFetch = async (
   onError = () => {},
   skipAuth = false
 ) => {
-  
   try {
-    const baseUrl = import.meta.env.VITE_BASE_SERVER_URL || "http://localhost:3000";
+    const baseUrl =
+      import.meta.env.VITE_BASE_SERVER_URL || "http://localhost:3000";
+
     const fullUrl = `${baseUrl}/api${url.startsWith("/") ? "" : "/"}${url}`;
 
     const token = localStorage.getItem("token");
@@ -17,7 +18,6 @@ export const customFetch = async (
       "Content-Type": "application/json",
       ...(token && !skipAuth && { Authorization: `Bearer ${token}` }),
     };
-
 
     const response = await fetch(fullUrl, {
       method: fetch_method,
@@ -28,20 +28,29 @@ export const customFetch = async (
           : undefined,
     });
 
+    // 🔥 Manejo correcto de error HTTP
+    if (!response.ok) {
+      let errorMessage = `Error ${response.status}`;
 
+      try {
+        const errorData = await response.json();
+        errorMessage =
+          errorData?.error || errorData?.message || errorMessage;
+      } catch {
+        // Si no viene JSON, ignoramos
+      }
 
-if (!response.ok) {
-  const errorData = await response.json(); 
-  throw new Error(errorData.error || errorData.message || `Error ${response.status}`);
-}
+      onError(new Error(errorMessage));
+      return null;
+    }
 
     const data = await response.json();
     onSuccess(data);
     return data;
 
   } catch (error) {
-  console.error("Error en customFetch:", error.message);
-  onError(error);
-  return null; // ❗️ NO throw error
-}
+    console.error("Error en customFetch:", error.message);
+    onError(error);
+    return null; // ❗️ NO throw
+  }
 };
